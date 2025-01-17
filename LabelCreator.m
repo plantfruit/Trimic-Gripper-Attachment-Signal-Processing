@@ -12,4 +12,5 @@ for i = 1:gridSize
     end
 end
 
-save("5by5_trimic1_labels.txt", "labels")
+
+save("5by5_trimic1_labels.txt", "labels", "-ascii")
