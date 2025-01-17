@@ -9,14 +9,13 @@ Fs = 48e3;
 grid5x5_mic1 = '5x5 Grid Mic 1';
 grid5x5_mic2 = '5x5 Grid Mic 2';
 grid5x5_mic3 = '5x5 Grid Mic 3';
-grid5x5_mic3old = '5x5 Grid Mic 3 Old';
 
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = grid5x5_mic3old;
+folderPath = grid5x5_mic1;
 
 % Select the distance trial to analyze
 i = 4;
@@ -33,9 +32,9 @@ t = length(transmitSignal);
 % For 26 cm tube -> make this 0
 % For 10 cm tube -> make this 2
 minPeakProminence = 2;
-numFilesSelected = 50;
+numFilesSelected = 20;
 pulseNum = 20; % Number of pulses to extract from each file
-pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
+pulseInd = 9; % Where we start collecting the number of pulses, from cross-correlation indices
 figDims = [2 2]; %[3 9]; %[3 2];
 %increments = [0.24 0.43];
 
@@ -144,7 +143,7 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
 
         % Plot FFT before smoothing
         % subplot(figDims(1), figDims(2), 3); hold on; plot(f, micDataF); xlim([0 22000]); ylim([0 140])
-
+        
         % subplotCounter = subplotCounter + 1;
 
         % Smooth out noise and "false peaks" using an average filter
@@ -154,6 +153,8 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         if (std(smoothMicF) < 12)
             continue
         end
+        if (smoothMicF(1))
+        pulseCounter = pulseCounter + 1;
 
 
         % Window the FFT graph so only the first 8 (or possibly 9)
@@ -161,14 +162,6 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         [~, resWindow(1)] = min(abs(f - 5000)); % - windF1
         [~, resWindow(2)] = min(abs(f - 21000));
         windowedSmooth = smoothMicF(resWindow(1):resWindow(2));
-
-        % if (windowedSmooth(1) < 80)
-        %     continue
-        % end
-
-        pulseCounter = pulseCounter + 1;
-
-
 
         % Find the resonance frequencies
         [peakVals, peakLocs] = findpeaks(windowedSmooth, "MinPeakProminence", minPeakProminence, 'MinPeakDistance', 8);
