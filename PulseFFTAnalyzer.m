@@ -6,101 +6,16 @@ Fs = 48e3;
 %=========================================================================
 % List of Filenames
 %=========================================================================
-folderNameRubber = 'Rubber Data 2';
-folderNameRep1 = 'Frequency Shift Data';
-folderNameRep2 = 'Frequency Shift Data 2';
-folderNameRep3 = 'Frequency Shift Data 3';
-folderNameBal1 = 'Balloon Data 1';
-folderNameTemp = 'Temp Data';
-folderNameDrum = 'New Drum Data';
-
-tr1mic_1 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_2 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_3 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_4 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_5 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_6 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_7 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_8 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_9 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_10 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"]; 
-tr1mic_11 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_12 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_13 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_14 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_15 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_16 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_17 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_18 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_19 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_20 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_21 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_22 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_23 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_24 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_25 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-
-tr1mic_1 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_2 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_3 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_4 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_5 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_6 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_7 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_8 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_9 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_10 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"]; 
-tr1mic_11 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_12 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_13 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_14 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_15 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_16 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_17 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_18 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_19 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_20 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_21 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_22 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_23 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_24 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_25 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-
-tr1mic_1 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_2 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_3 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_4 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_5 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_6 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_7 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_8 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_9 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_10 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"]; 
-tr1mic_11 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_12 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_13 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_14 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_15 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_16 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_17 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_18 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_19 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_20 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_21 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_22 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_23 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_24 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-tr1mic_25 = [".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt", ".txt"];
-
-
+grid5x5_mic1 = "5x5 Grid Mic 1";
+grid5x5_mic2 = "5x5 Grid Mic 2"; 
+grid5x5_mic3 = "5x5 Grid Mic 3";
 
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-fileNames = trimic3;
-folderPath = folderNameDrum;
+folderPath = grid5x5_mic1;
 
 % Select the distance trial to analyze
 i = 4;
@@ -127,15 +42,10 @@ figDims = [5 4]; %[3 2];
 % Expressed in units of percentage
 timeIncrements = [0.22 0.7 0.77];
 
-
 % Go to the directory containing data files (other directories are
 % commented out
 cd(folderPath);
 
-
-% Read the specified file
-%fileName = fileNames(i);
-%micData = readmatrix(fileName);
 % Excise trailing zeros
 %micData = micData(1:find(micData, 1, 'last'));
 
@@ -157,8 +67,18 @@ allpwelchPresses = zeros(length(fileNames), 100);
 allDiffStarts = zeros(length(fileNames), 100);
 allDiffPresses = zeros(length(fileNames), 100);
 
-for k = 1:length(fileNames)
-    fileName = fileNames(k);
+% Source: https://www.mathworks.com/matlabcentral/answers/411500-how-do-i-read-all-the-files-in-a-folder
+% Please save all files name in symmetrically before doing the operation
+% names for example f1,f2,f3...
+% Save the folder of files in the current directory
+% Pls note the format of files,change it as required
+original_files = dir([folderName '/*.txt']);
+
+dirStartInd = pulseNum * (pulseInd - 1) + 1;
+
+for k = dirStartInd:dirStartInd + pulseNum - 1
+    fileName = [folderName '/' original_files(k).name];
+
     micData = readmatrix(fileName);
 
     [r, lags] = xcorr(transmitSignal, micData);
