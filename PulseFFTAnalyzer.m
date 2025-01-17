@@ -100,7 +100,7 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
     peakTimes = -lags(peakLocations);
     peakTimes = abs(sort(peakTimes));
     chirpIndex = 1; % Maybe change later?
-    title(length(peakTimes))
+    title(length(peakTimes) + " " + fileName)
 
      selPeaks = peaks(length(peakTimes) - 2 - pulseNum + 1: length(peakTimes) - 2 - pulseNum + 1 + 20);
     selLocs = peakLocations(length(peakLocations) - 2 - pulseNum + 1: length(peakLocations) - 2 - pulseNum + 1 + 20);
@@ -114,10 +114,10 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
     
     pulseCounter = 1;
     % Iterate through all delta pulses detected by the cross-correlation
-    while pulseCounter < pulseNum
+    while pulseCounter < pulseNum + 1
         % chirpIndex = length(peakTimes) - 2 - pulseNum + i;
         chirpIndex = length(peakTimes) - 1 - pulseCounter;
-        pulseCounter = pulseCounter + 1;
+        
 
         % Extract the pulse and its reflections
         % Do this only at the specified time increments: roughly quarter of
@@ -139,9 +139,10 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         f = linspace(0,Fs, length(micDataF));
 
         % Filter out noisy pulse samples
-        if (mean(micDataF) < 66)
+        if (var(micDataF, 0, "all") < 170)
             continue
         end
+        pulseCounter = pulseCounter + 1;
 
         % Plot frequency response
         if (findResonances == true)
