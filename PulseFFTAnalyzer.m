@@ -16,7 +16,7 @@ grid5x5_mic3old = '5x5 Grid Mic 3 Old';
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = grid5x5_mic3old;
+folderPath = grid5x5_mic3;
 
 % Select the distance trial to analyze
 i = 4;
@@ -25,7 +25,7 @@ i = 4;
 findResonances = true;
 windowModifier = 0;
 transmitSignal = [0 0 0 0 0 1 0 0 0 0 0];
-minpeakHeight = 300; % 10, previously
+minpeakHeight = 1000; % 300, previously % 10, previously
 gapTime = 0.05;
 pulseLength = 300;
 smoothingFactor = 5; % 5 - tube. 10 - balloon
@@ -34,8 +34,8 @@ t = length(transmitSignal);
 % For 10 cm tube -> make this 2
 minPeakProminence = 2;
 numFilesSelected = 50;
-pulseNum = 20; % Number of pulses to extract from each file
-pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
+pulseNum = 10; % Number of pulses to extract from each file
+pulseInd = 21; % Where we start collecting the number of pulses, from cross-correlation indices
 figDims = [2 2]; %[3 9]; %[3 2];
 %increments = [0.24 0.43];
 
@@ -103,9 +103,9 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
     chirpIndex = 1; % Maybe change later?
     title(length(peakTimes) + " " + fileName)
 
-    selPeaks = peaks(length(peakTimes) - 2 - pulseNum + 1: length(peakTimes) - 2 - pulseNum + 1 + 20);
-    selLocs = peakLocations(length(peakLocations) - 2 - pulseNum + 1: length(peakLocations) - 2 - pulseNum + 1 + 20);
-    hold on; scatter(selLocs, selPeaks)
+    % selPeaks = peaks(length(peakTimes) - 2 - pulseNum + 1: length(peakTimes) - 2 - pulseNum + 1 + 20);
+    % selLocs = peakLocations(length(peakLocations) - 2 - pulseNum + 1: length(peakLocations) - 2 - pulseNum + 1 + 20);
+    % hold on; scatter(selLocs, selPeaks)
 
 
     startFreqs = zeros(1,8);
@@ -201,7 +201,17 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         xlabel("Frequency (Hz)"); ylabel("Magnitude");
         title("Microphone Data, Frequency-Domain, " + fileName)
 
+
+
+        
     end
+
+    % Only do this for the new mic, when we're duplicating the
+        % remainder trials
+        for l = 1:pulseNum
+            allPressFFT(pressFFTCounter, 1:length(windowedF)) = allPressFFT(pressFFTCounter - pulseNum,:);
+            pressFFTCounter = pressFFTCounter + 1;
+        end
 end
 
-% cd ..
+    % cd ..
