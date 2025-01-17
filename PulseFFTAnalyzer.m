@@ -6,9 +6,9 @@ Fs = 48e3;
 %=========================================================================
 % List of Filenames
 %=========================================================================
-grid5x5_mic1 = "5x5 Grid Mic 1";
-grid5x5_mic2 = "5x5 Grid Mic 2"; 
-grid5x5_mic3 = "5x5 Grid Mic 3";
+grid5x5_mic1 = '5x5 Grid Mic 1';
+grid5x5_mic2 = '5x5 Grid Mic 2';
+grid5x5_mic3 = '5x5 Grid Mic 3';
 
 %=========================================================================
 % Beginning of Analysis Portion of Script
@@ -34,7 +34,7 @@ t = length(transmitSignal);
 minPeakProminence = 2;
 pulseNum = 20; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
-figDims = [5 4]; %[3 2];
+figDims = [1 3]; %[3 9]; %[3 2];
 %increments = [0.24 0.43];
 
 % List of intermediate level time points which are used to find and
@@ -44,10 +44,18 @@ timeIncrements = [0.22 0.7 0.77];
 
 % Go to the directory containing data files (other directories are
 % commented out
-cd(folderPath);
+% cd(folderPath);
 
 % Excise trailing zeros
 %micData = micData(1:find(micData, 1, 'last'));
+
+% Source: https://www.mathworks.com/matlabcentral/answers/411500-how-do-i-read-all-the-files-in-a-folder
+% Please save all files name in symmetrically before doing the operation
+% names for example f1,f2,f3...
+% Save the folder of files in the current directory
+% Pls note the format of files,change it as required
+originalFiles = dir([folderPath '/*.txt']);
+fileNames = originalFiles;
 
 % Large arrays that have been pre-allocated to store results calculated
 % during the primary loop
@@ -67,17 +75,12 @@ allpwelchPresses = zeros(length(fileNames), 100);
 allDiffStarts = zeros(length(fileNames), 100);
 allDiffPresses = zeros(length(fileNames), 100);
 
-% Source: https://www.mathworks.com/matlabcentral/answers/411500-how-do-i-read-all-the-files-in-a-folder
-% Please save all files name in symmetrically before doing the operation
-% names for example f1,f2,f3...
-% Save the folder of files in the current directory
-% Pls note the format of files,change it as required
-original_files = dir([folderName '/*.txt']);
 
 dirStartInd = pulseNum * (pulseInd - 1) + 1;
 
+% Select a group of files from the folder
 for k = dirStartInd:dirStartInd + pulseNum - 1
-    fileName = [folderName '/' original_files(k).name];
+    fileName = [folderPath '/' originalFiles(k).name];
 
     micData = readmatrix(fileName);
 
@@ -93,16 +96,16 @@ for k = dirStartInd:dirStartInd + pulseNum - 1
     peakTimes = -lags(peakLocations);
     peakTimes = abs(sort(peakTimes));
     chirpIndex = 1; % Maybe change later?
+    title(length(peakTimes))
 
     startFreqs = zeros(1,8);
-
     pressFreqs = zeros(1,8);
 
     subplotCounter = 1;
     figure
     % Iterate through all delta pulses detected by the cross-correlation
     for i = 1:pulseNum
-        chirpIndex = pulseIndex + i - 1;
+        chirpIndex = length(peakTimes) - 10 - pulseNum + i;
 
         % Extract the pulse and its reflections
         % Do this only at the specified time increments: roughly quarter of
@@ -111,7 +114,12 @@ for k = dirStartInd:dirStartInd + pulseNum - 1
 
         % Extract delta pulse by taking a small amount of time before and
         % after it
-        chirpSegment = micData(peakTimes(chirpIndex) - pulseLength*1 + windowModifier : peakTimes(chirpIndex) + pulseLength*1.5 + windowModifier  - 1);
+        chirpSegment = micData(1:2);
+        try
+        chirpSegment = micData(peakTimes(chirpIndex) - pulseLength * 0.25 + windowModifier : peakTimes(chirpIndex) + pulseLength * 1.25 + windowModifier  - 1);
+        catch ME
+            chirpSegment = micData(peakTimes(chirpIndex) - pulseLength * 0.25 + windowModifier : end);
+        end
         subplot(figDims(1), figDims(2), 1); hold on; graph = plot(chirpSegment); %hold on; xline((peakTimes(chirpIndex) + windowModifier) / Fs, 'b-'); xline((peakTimes(chirpIndex) /Fs + (length(t) + windowModifier  - 1) /Fs), 'r-');
         subplotCounter = subplotCounter + 1;
 
@@ -122,7 +130,8 @@ for k = dirStartInd:dirStartInd + pulseNum - 1
         % Plot frequency response
         if (findResonances == true)
             % Plot FFT before smoothing
-            subplot(figDims(1), figDims(2), 2); plot(f, micDataF); xlim([0 22000]); ylim([0 140])
+            subplot(figDims(1), figDims(2), 2); hold on; plot(f, micDataF); xlim([0 22000]); ylim([0 140])
+            subplotCounter = subplotCounter + 1;
 
             % Smooth out noise and "false peaks" using an average filter
             smoothMicF = smooth(micDataF, smoothingFactor);
@@ -151,49 +160,31 @@ for k = dirStartInd:dirStartInd + pulseNum - 1
             powerEstimate = pwelch(chirpSegment, 64);
             fftDerivative = diff(windowedSmooth); %diff(windowedF);
 
-            % Plot FFT from initial stage
-            if (i == round(timeIncrements(1) * length(peakTimes)))
-                subplot(figDims(1), figDims(2), 3)
-                hold on
-                graph = plot(f, micDataF);
-                xlim([0 22000]); ylim([0 140])
 
-                startFreqs(1:length(resonanceFrequencies)) = realResonanceFrequencies;
-                allStartFreqs(k, 1:length(startFreqs)) = startFreqs;
-                allAmpStartLevels(k,1:length(peakVals)) = peakVals;
-                allStartFFT(k, 1:length(windowedF)) = windowedF.';
-                allpwelchStarts(k, 1:length(powerEstimate)) = powerEstimate.';
-                allDiffStarts(k, 1:length(fftDerivative)) = fftDerivative.';
-                %allAmpAreas(k, 1) = trapz(windowedSmooth(round(length(windowedSmooth)* 0.6):end));
-            end
-
-            % Plot FFT in pressdown stage
-            if (i == round(timeIncrements(2) * length(peakTimes)))
-                subplot(figDims(1), figDims(2), 4)
-                hold on
-                graph = plot(f, micDataF);
-                xlim([0 22000]); ylim([0 140])
+            startFreqs(1:length(resonanceFrequencies)) = realResonanceFrequencies;
+            allStartFreqs(k, 1:length(startFreqs)) = startFreqs;
+            allAmpStartLevels(k,1:length(peakVals)) = peakVals;
+            allStartFFT(k, 1:length(windowedF)) = windowedF.';
+            allpwelchStarts(k, 1:length(powerEstimate)) = powerEstimate.';
+            allDiffStarts(k, 1:length(fftDerivative)) = fftDerivative.';
 
 
-                pressFreqs(1:length(resonanceFrequencies)) = realResonanceFrequencies;
-                allPressFreqs(k, 1:length(pressFreqs)) = pressFreqs;
+            pressFreqs(1:length(resonanceFrequencies)) = realResonanceFrequencies;
+            allPressFreqs(k, 1:length(pressFreqs)) = pressFreqs;
 
-                allFreqShifts(k, 1:max([length(pressFreqs) length(startFreqs)])) = [pressFreqs zeros(1, length(startFreqs) - length(pressFreqs))] ...
-                    - [startFreqs zeros(1, length(pressFreqs) - length(startFreqs))];
-                % Store the amplitude levels from press down stage
-                allAmpPressLevels(k,1:length(peakVals)) = peakVals;
-                allPressFFT(k, 1:length(windowedF)) = windowedF.';
-                allpwelchPresses(k, 1:length(powerEstimate)) = powerEstimate.';
-                allDiffPresses(k, 1:length(fftDerivative)) = fftDerivative.';
-                %allAmpAreas(k, 2) = trapz(windowedSmooth(round(length(windowedSmooth)* 0.6):end));
-            end
+            allFreqShifts(k, 1:max([length(pressFreqs) length(startFreqs)])) = [pressFreqs zeros(1, length(startFreqs) - length(pressFreqs))] ...
+                - [startFreqs zeros(1, length(pressFreqs) - length(startFreqs))];
+            % Store the amplitude levels from press down stage
+            allAmpPressLevels(k,1:length(peakVals)) = peakVals;
+            allPressFFT(k, 1:length(windowedF)) = windowedF.';
+            allpwelchPresses(k, 1:length(powerEstimate)) = powerEstimate.';
+            allDiffPresses(k, 1:length(fftDerivative)) = fftDerivative.';
+            %allAmpAreas(k, 2) = trapz(windowedSmooth(round(length(windowedSmooth)* 0.6):end));
 
-            % figure
-            subplot(figDims(1), figDims(2),5)
-            plot(f, micDataF); hold on; scatter(resonanceFrequencies + f(resWindow(1)), peakVals); xlim([0 20e3]); ylim([0 140])
-            subplot(figDims(1), figDims(2), 6)
-            plot(f(1:resWindow(2)-resWindow(1) + 1), windowedSmooth); hold on; scatter(resonanceFrequencies, peakVals)
+            subplot(figDims(1), figDims(2), 3)
+            hold on; plot(f(1:resWindow(2)-resWindow(1) + 1), windowedF); %hold on; scatter(resonanceFrequencies, peakVals)
             ylim([0 140])
+            subplotCounter = subplotCounter + 1;
 
             % Print the resonance frequencies that we found
 
@@ -207,4 +198,4 @@ for k = dirStartInd:dirStartInd + pulseNum - 1
     end
 end
 
-cd ..
+% cd ..
