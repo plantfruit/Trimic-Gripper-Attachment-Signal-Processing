@@ -110,36 +110,44 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
     startFreqs = zeros(1,8);
     pressFreqs = zeros(1,8);
 
-    subplotCounter = 1;
+    % subplotCounter = 1;
     
+    pulseCounter = 1;
     % Iterate through all delta pulses detected by the cross-correlation
-    for i = 1:pulseNum
-        chirpIndex = length(peakTimes) - 2 - pulseNum + i;
+    while pulseCounter < pulseNum
+        % chirpIndex = length(peakTimes) - 2 - pulseNum + i;
+        chirpIndex = length(peakTimes) - 1 - pulseCounter;
+        pulseCounter = pulseCounter + 1;
 
         % Extract the pulse and its reflections
         % Do this only at the specified time increments: roughly quarter of
         % the way through (resting state) or halfway through (pressdown
-        % state)
+        % state) 
 
         % Extract delta pulse by taking a small amount of time before and
         % after it
         try
             chirpSegment = micData(peakTimes(chirpIndex) - pulseLength * 0.25 + windowModifier : peakTimes(chirpIndex) + pulseLength * 1.25 + windowModifier  - 1);
-        catch ME
+        catch ME % Out of bounds index error
             chirpSegment = micData(peakTimes(chirpIndex) - pulseLength * 0.25 + windowModifier : end);
         end
         subplot(figDims(1), figDims(2), 2); hold on; graph = plot(chirpSegment); %hold on; xline((peakTimes(chirpIndex) + windowModifier) / Fs, 'b-'); xline((peakTimes(chirpIndex) /Fs + (length(t) + windowModifier  - 1) /Fs), 'r-');
-        subplotCounter = subplotCounter + 1;
+        % subplotCounter = subplotCounter + 1;
 
         % Perform FFT of the chirp segment
         micDataF = mag2db(abs(fft(chirpSegment)));
         f = linspace(0,Fs, length(micDataF));
 
+        % Filter out noisy pulse samples
+        if (mean(micDataF) < 66)
+            continue
+        end
+
         % Plot frequency response
         if (findResonances == true)
             % Plot FFT before smoothing
             subplot(figDims(1), figDims(2), 3); hold on; plot(f, micDataF); xlim([0 22000]); ylim([0 140])
-            subplotCounter = subplotCounter + 1;
+            % subplotCounter = subplotCounter + 1;
 
             % Smooth out noise and "false peaks" using an average filter
             smoothMicF = smooth(micDataF, smoothingFactor);
@@ -168,38 +176,15 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
             powerEstimate = pwelch(chirpSegment, 64);
             fftDerivative = diff(windowedSmooth); %diff(windowedF);
 
-
-            startFreqs(1:length(resonanceFrequencies)) = realResonanceFrequencies;
-            allStartFreqs(k, 1:length(startFreqs)) = startFreqs;
-            allAmpStartLevels(k,1:length(peakVals)) = peakVals;
-            allStartFFT(k, 1:length(windowedF)) = windowedF.';
-            allpwelchStarts(k, 1:length(powerEstimate)) = powerEstimate.';
-            allDiffStarts(k, 1:length(fftDerivative)) = fftDerivative.';
-
-
-            pressFreqs(1:length(resonanceFrequencies)) = realResonanceFrequencies;
-            allPressFreqs(k, 1:length(pressFreqs)) = pressFreqs;
-
-            allFreqShifts(k, 1:max([length(pressFreqs) length(startFreqs)])) = [pressFreqs zeros(1, length(startFreqs) - length(pressFreqs))] ...
-                - [startFreqs zeros(1, length(pressFreqs) - length(startFreqs))];
-            % Store the amplitude levels from press down stage
-            allAmpPressLevels(k,1:length(peakVals)) = peakVals;
             %allPressFFT(k, 1:length(windowedF)) = windowedF.';
             allPressFFT(pressFFTCounter, 1:length(windowedF)) = windowedF.';
             pressFFTCounter = pressFFTCounter + 1;
-            allpwelchPresses(k, 1:length(powerEstimate)) = powerEstimate.';
-            allDiffPresses(k, 1:length(fftDerivative)) = fftDerivative.';
-            %allAmpAreas(k, 2) = trapz(windowedSmooth(round(length(windowedSmooth)* 0.6):end));
+            
 
             subplot(figDims(1), figDims(2), 4)
             hold on; plot(f(1:resWindow(2)-resWindow(1) + 1), windowedF); %hold on; scatter(resonanceFrequencies, peakVals)
             ylim([0 140])
-            subplotCounter = subplotCounter + 1;
-
-            % Print the resonance frequencies that we found
-
-            %format short g
-            %realResonanceFrequencies'
+            % subplotCounter = subplotCounter + 1;
         end
 
         xlabel("Frequency (Hz)"); ylabel("Magnitude");
