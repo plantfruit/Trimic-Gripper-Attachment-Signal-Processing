@@ -16,13 +16,11 @@ grid5x5_mic3old = '5x5 Grid Mic 3 Old';
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = grid5x5_mic3;
-
-% Select the distance trial to analyze
-i = 4;
+folderPath = grid5x5_mic1;
 
 % "Switches" to control the script operation
 findResonances = true;
+trialDuplication = false; % Duplicate the FFTs of each trial, in series after the set, row-wise
 windowModifier = 0;
 transmitSignal = [0 0 0 0 0 1 0 0 0 0 0];
 minpeakHeight = 1000; % 300, previously % 10, previously
@@ -52,10 +50,6 @@ timeIncrements = [0.22 0.7 0.77];
 %micData = micData(1:find(micData, 1, 'last'));
 
 % Source: https://www.mathworks.com/matlabcentral/answers/411500-how-do-i-read-all-the-files-in-a-folder
-% Please save all files name in symmetrically before doing the operation
-% names for example f1,f2,f3...
-% Save the folder of files in the current directory
-% Pls note the format of files,change it as required
 originalFiles = dir([folderPath '/*.txt']);
 fileNames = originalFiles;
 
@@ -106,7 +100,6 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
     % selPeaks = peaks(length(peakTimes) - 2 - pulseNum + 1: length(peakTimes) - 2 - pulseNum + 1 + 20);
     % selLocs = peakLocations(length(peakLocations) - 2 - pulseNum + 1: length(peakLocations) - 2 - pulseNum + 1 + 20);
     % hold on; scatter(selLocs, selPeaks)
-
 
     startFreqs = zeros(1,8);
     pressFreqs = zeros(1,8);
@@ -200,18 +193,16 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
 
         xlabel("Frequency (Hz)"); ylabel("Magnitude");
         title("Microphone Data, Frequency-Domain, " + fileName)
-
-
-
-        
     end
 
     % Only do this for the new mic, when we're duplicating the
-        % remainder trials
+    % remainder trials
+    if (trialDuplication == true)
         for l = 1:pulseNum
             allPressFFT(pressFFTCounter, 1:length(windowedF)) = allPressFFT(pressFFTCounter - pulseNum,:);
             pressFFTCounter = pressFFTCounter + 1;
         end
+    end
 end
 
-    % cd ..
+% cd ..
