@@ -16,7 +16,7 @@ grid5x5_mic3old = '5x5 Grid Mic 3 Old';
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = grid5x5_mic1;
+folderPath = grid5x5_mic3;
 
 % "Switches" to control the script operation
 findResonances = true;

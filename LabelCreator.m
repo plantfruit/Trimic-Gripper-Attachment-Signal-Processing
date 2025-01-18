@@ -1,6 +1,6 @@
 % For the ML task
 
-pulseNum = 20;
+pulseNum = 10;
 fileNum = 10;
 gridSize = 25;
 
@@ -13,4 +13,4 @@ for i = 1:gridSize
 end
 
 
-save("5by5_trimic1_labels.txt", "labels", "-ascii")
+save("5by5_trimic1_re_labels.txt", "labels", "-ascii")
