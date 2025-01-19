@@ -50,6 +50,11 @@ for k = 1:micNum
             medCounter = medCounter + 1;
         end
 
+        % Avoid redundant legends since all subplots use the same colors
+        if (i == 1)
+            legend('10', '50', '90')
+        end
+
         title(i)
     end
 end
