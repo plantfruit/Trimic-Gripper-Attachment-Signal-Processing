@@ -20,12 +20,12 @@ fileNames = {grid5x5_1_1; grid5x5_1_2; grid5x5_1_3};
 
 % PROCESSING BEGINS
 % Prepare colormap for the graphs
-% cmap = colormap('jet'); % 'parula', 'hsv',
-% colorIndices = linspace(1, size(cmap, 1), labelNum);
+cmap = colormap('jet'); % 'parula', 'hsv',
+colorIndices = linspace(1, size(cmap, 1), labelNum);
 
 allMedianRows = zeros(labelNum * length(percentOfLens), 100); medCounter = 1;
 for k = 1:micNum
-    fileName = fileNames{k};
+    fileName = fileNames(k).;
     figure
     micData = readmatrix(fileName);
 
@@ -45,12 +45,12 @@ for k = 1:micNum
             medianRow = median(partOfDataBlock, 1);
 
             hold on
-            plot(medianRow) %, 'Color', cmap(round(colorIndices(i)), :))
+            plot(medianRow, 'Color', cmap(round(colorIndices(i)), :))
             allMedianRows(medCounter, 1:length(medianRow)) = medianRow;
             medCounter = medCounter + 1;
         end
 
-        title(i)
+        % title(i)
     end
 end
 
