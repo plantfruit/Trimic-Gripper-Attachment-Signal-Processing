@@ -55,7 +55,8 @@ for k = 1:micNum
             legend('10', '50', '90')
         end
 
-        title(i)
+        title(i) 
+        ylim([50 100])
     end
 end
 

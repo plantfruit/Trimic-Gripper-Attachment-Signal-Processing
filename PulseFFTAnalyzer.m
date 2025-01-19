@@ -32,7 +32,7 @@ t = length(transmitSignal);
 % For 10 cm tube -> make this 2
 minPeakProminence = 2;
 numFilesSelected = 50;
-pulseNum = 10; % Number of pulses to extract from each file
+pulseNum = 1; % Number of pulses to extract from each file
 pulseInd = 21; % Where we start collecting the number of pulses, from cross-correlation indices
 figDims = [2 2]; %[3 9]; %[3 2];
 %increments = [0.24 0.43];
