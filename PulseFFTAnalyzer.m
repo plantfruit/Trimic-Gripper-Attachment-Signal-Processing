@@ -11,12 +11,22 @@ grid5x5_mic2 = '5x5 Grid Mic 2';
 grid5x5_mic3 = '5x5 Grid Mic 3';
 grid5x5_mic3old = '5x5 Grid Mic 3 Old';
 
+varobj2_1 = 'Various Objects 2 Mic 1';
+varobj2_2 = 'Various Objects 2 Mic 2';
+varobj2_3 = 'Various Objects 2 Mic 3';
+
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = grid5x5_mic3;
+folderPath = varobj2_3;
+
+% Parameters
+numFilesSelected = 15;
+pulseNum = 5; % Number of pulses to extract from each file
+pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
+noiseThreshold = 12;
 
 % "Switches" to control the script operation
 findResonances = true;
@@ -31,9 +41,6 @@ t = length(transmitSignal);
 % For 26 cm tube -> make this 0
 % For 10 cm tube -> make this 2
 minPeakProminence = 2;
-numFilesSelected = 50;
-pulseNum = 1; % Number of pulses to extract from each file
-pulseInd = 21; % Where we start collecting the number of pulses, from cross-correlation indices
 figDims = [2 2]; %[3 9]; %[3 2];
 %increments = [0.24 0.43];
 
@@ -144,7 +151,7 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         smoothMicF = smooth(micDataF, smoothingFactor);
 
         % Filter out noisy pulse samples
-        if (std(smoothMicF) < 12)
+        if (std(smoothMicF) < noiseThreshold)
             continue
         end
 
@@ -155,9 +162,9 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         [~, resWindow(2)] = min(abs(f - 21000));
         windowedSmooth = smoothMicF(resWindow(1):resWindow(2));
 
-        % if (windowedSmooth(1) < 80)
-        %     continue
-        % end
+        if (windowedSmooth(1) < 80)
+            continue
+        end
 
         pulseCounter = pulseCounter + 1;
 
