@@ -10,15 +10,23 @@ grid5x5_mic1 = '5x5 Grid Mic 1';
 grid5x5_mic2 = '5x5 Grid Mic 2';
 grid5x5_mic3 = '5x5 Grid Mic 3';
 grid5x5_mic3old = '5x5 Grid Mic 3 Old';
+various_mic1 = 'Various Objects Mic 1';
+various_mic2 = 'Various Objects Mic 2';
+various_mic3 = 'Various Objects Mic 3';
 
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = grid5x5_mic3;
+folderPath = various_mic3;
 
 % "Switches" to control the script operation
+numFilesSelected = 1;
+pulseNum = 100; % Number of pulses to extract from each file
+pulseInd = 9; % Where we start collecting the number of pulses, from cross-correlation indices
+noiseThreshold = 9; % 12 - For the screwdriver. 
+
 findResonances = true;
 trialDuplication = false; % Duplicate the FFTs of each trial, in series after the set, row-wise
 windowModifier = 0;
@@ -31,9 +39,6 @@ t = length(transmitSignal);
 % For 26 cm tube -> make this 0
 % For 10 cm tube -> make this 2
 minPeakProminence = 2;
-numFilesSelected = 50;
-pulseNum = 1; % Number of pulses to extract from each file
-pulseInd = 21; % Where we start collecting the number of pulses, from cross-correlation indices
 figDims = [2 2]; %[3 9]; %[3 2];
 %increments = [0.24 0.43];
 
@@ -73,7 +78,7 @@ allDiffPresses = zeros(length(fileNames), 100);
 
 allPressFFT = zeros(numFilesSelected * pulseNum, 100);
 
-dirStartInd = 10 * (pulseInd - 1) + 1;
+dirStartInd = numFilesSelected * (pulseInd - 1) + 1;
 
 pressFFTCounter = 1;
 % Select a group of files from the folder
@@ -144,7 +149,7 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         smoothMicF = smooth(micDataF, smoothingFactor);
 
         % Filter out noisy pulse samples
-        if (std(smoothMicF) < 12)
+        if (std(smoothMicF) < noiseThreshold)
             continue
         end
 
@@ -155,9 +160,9 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         [~, resWindow(2)] = min(abs(f - 21000));
         windowedSmooth = smoothMicF(resWindow(1):resWindow(2));
 
-        % if (windowedSmooth(1) < 80)
-        %     continue
-        % end
+        if (windowedSmooth(1) < 80)
+            continue
+        end
 
         pulseCounter = pulseCounter + 1;
 

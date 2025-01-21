@@ -5,18 +5,21 @@ clear
 grid5x5_1_1 = 'Excel Sheets/5by5_trimic_1.xlsx';
 grid5x5_1_2 = 'Excel Sheets/5by5_trimic_2.xlsx';
 grid5x5_1_3 = 'Excel Sheets/5by5_trimic_3.xlsx';
+miscobj_1 = 'Excel Sheets/miscobj_1.xlsx';
+miscobj_2 = 'Excel Sheets/miscobj_2.xlsx';
+miscobj_3 = 'Excel Sheets/miscobj_3.xlsx';
 
 % CONSTANTS
-pulseNum = 10; % Number of pulses extracted from each file
-fileNum = 10; % Number of files for each label
-labelNum = 25; % Number of data points from the grid in experiment
-figDims = [5 5];
+pulseNum = 5; % Number of pulses extracted from each file
+fileNum = 3; % Number of files for each label
+labelNum = 4; % Number of data points from the grid in experiment
+figDims = [2 2]; % E.g. 5 5 for the 5x5 grid
 percentOfLens = [10 50 90];
 micNum = 3;
 
 % SWITCHES
 fileName = grid5x5_1_1;
-fileNames = {grid5x5_1_1; grid5x5_1_2; grid5x5_1_3};
+fileNames = {miscobj_1, miscobj_2, miscobj_3}; %{grid5x5_1_1; grid5x5_1_2; grid5x5_1_3};
 
 % PROCESSING BEGINS
 % Prepare colormap for the graphs
