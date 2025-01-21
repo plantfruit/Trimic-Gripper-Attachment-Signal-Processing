@@ -13,4 +13,4 @@ for i = 1:gridSize
 end
 
 
-save("trimic1_force_labels.txt", "labels", "-ascii")
+save("miscobj2_labels.txt", "labels", "-ascii")

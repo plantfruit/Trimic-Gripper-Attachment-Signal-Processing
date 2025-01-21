@@ -15,16 +15,20 @@ varobj2_1 = 'Various Objects 2 Mic 1';
 varobj2_2 = 'Various Objects 2 Mic 2';
 varobj2_3 = 'Various Objects 2 Mic 3';
 
+force5x5_1 = 'Force 3 Points Mic 1';
+force5x5_2 = 'Force 3 Points Mic 2';
+force5x5_3 = 'Force 3 Points Mic 3';
+
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = varobj2_3;
+folderPath = force5x5_3;
 
 % Parameters
-numFilesSelected = 15;
-pulseNum = 5; % Number of pulses to extract from each file
+numFilesSelected = 30;
+pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 noiseThreshold = 12;
 
