@@ -6,10 +6,6 @@ grid5x5_1_1 = 'Excel Sheets/5by5_trimic_1.xlsx';
 grid5x5_1_2 = 'Excel Sheets/5by5_trimic_2.xlsx';
 grid5x5_1_3 = 'Excel Sheets/5by5_trimic_3.xlsx';
 
-varobj2_1 = 'Excel Sheets/miscobj2_1.xlsx';
-varobj2_2 = 'Excel Sheets/miscobj2_2.xlsx';
-varobj2_3 = 'Excel Sheets/miscobj2_3.xlsx';
-
 force_1 = 'Excel Sheets/trimic1_force_1.xlsx'; 
 force_2 = 'Excel Sheets/trimic1_force_2.xlsx';
 force_3 = 'Excel Sheets/trimic1_force_3.xlsx';
@@ -23,24 +19,32 @@ percentOfLens = [10 50 90];
 micNum = 3;
 
 % SWITCHES
-fileName = grid5x5_1_1;
-fileNames = {force_1, force_2, force_3};
+fileNames = {grid5x5_1_1, force_1, grid5x5_1_2, force_2, grid5x5_1_3, force_3};
     %{varobj2_1, varobj2_2, varobj2_3}; 
     % {grid5x5_1_1; grid5x5_1_2; grid5x5_1_3};
 
 % PROCESSING BEGINS
-% Prepare colormap for the graphs
-% cmap = colormap('jet'); % 'parula', 'hsv',
-% colorIndices = linspace(1, size(cmap, 1), labelNum);
+for k = 1:micNum
+    figure
+
+
+
+end
+
+
 
 allMedianRows = zeros(labelNum * length(percentOfLens), 100); medCounter = 1;
 for k = 1:micNum
-    fileName = fileNames{k};
+    subplot(figDims(1), figDims(2), )
     figure
-    micData = readmatrix(fileName);
+    gridName = fileNames{k};
+    forceName = fileNames{k + 1};
+    
+    gridData = readMatrix(gridName);
+    forceData = readmatrix(fileName);
 
     for i = 1:labelNum
-        subplot(figDims(1), figDims(2), i)
+        
 
         % Extract all pulses for a certain label
         dataBlockLen = pulseNum * fileNum;
