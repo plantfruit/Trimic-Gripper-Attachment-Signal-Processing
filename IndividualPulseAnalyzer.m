@@ -88,7 +88,9 @@ dirStartInd = 10 * (pulseInd - 1) + 1;
 
 pressFFTCounter = 1;
 
-fileName = 'Force 3 Points Mic 1/1737412686120.txt'
+fileName = '5x5 Grid Mic 1/1736908122142.txt';
+%'Control Mic 1 Jan 21/1737505848626.txt';
+%'Various Objects Mic 2/1646489907164.txt';
 %'Force 3 Points Mic 1/1737412618573.txt';
 %'Various Objects 2 Mic 1/1737391078761.txt'
 %'5x5 Grid Mic 1/1736908122142.txt';
@@ -128,7 +130,7 @@ pulseCounter = 1;
 indexCounter = 1;
 % Iterate through all delta pulses detected by the cross-correlation
 % chirpIndex = length(peakTimes) - 2 - pulseNum + i;
-chirpIndex = 122;
+chirpIndex = 2;
 indexCounter = indexCounter + 1;
 
 % Extract the pulse and its reflections

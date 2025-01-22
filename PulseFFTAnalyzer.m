@@ -24,7 +24,7 @@ force5x5_3 = 'Force 3 Points Mic 3';
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = force5x5_2;
+folderPath = varobj2_2;
 
 % Parameters
 numFilesSelected = 30;
