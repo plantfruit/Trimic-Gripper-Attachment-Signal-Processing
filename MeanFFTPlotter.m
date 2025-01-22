@@ -44,7 +44,7 @@ for k = 1:micNum
 
     for j = 1:labelNum
         subplot(figDims(1), figDims(2), subplotCounter) 
-        gridIndBeg = (locationInds(k) - 1) * 100 + 1;
+        gridIndBeg = (locationInds(j) - 1) * 100 + 1;
         gridIndEnd = gridIndBeg + dataBlockLen - 1;
 
         gridBlock = gridData(gridIndBeg:gridIndEnd, :);
