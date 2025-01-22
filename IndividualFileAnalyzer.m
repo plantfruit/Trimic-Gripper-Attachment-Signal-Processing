@@ -32,7 +32,8 @@ pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 noiseThreshold = 12;
 
-fileName = '5x5 Grid Mic 1/1736908122142.txt';
+fileName = 'Various Objects Mic 3/1646478505197.txt';
+%'5x5 Grid Mic 1/1736908122142.txt';
 %'3x3 Grid Mic 1/1737492087629.txt';
 %'Various Objects Mic 1/1737326303453.txt';
 %'Force 3 Points Mic 1/1737412618573.txt';
