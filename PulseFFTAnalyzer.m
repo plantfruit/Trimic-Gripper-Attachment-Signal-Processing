@@ -33,7 +33,7 @@ folderPath = grid3x3_mic3;
 % Parameters
 numFilesSelected = 15;
 pulseNum = 10; % Number of pulses to extract from each file
-pulseInd = 9; % Where we start collecting the number of pulses, from cross-correlation indices
+pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 15;
 noiseThreshold = 12;
 
