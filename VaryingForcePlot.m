@@ -40,5 +40,6 @@ for k = 1:numMics
         end
 
     title("Point " + i)
+    ylim([50 110])
     end
 end

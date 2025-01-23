@@ -33,9 +33,10 @@ folderPath = grid3x3_mic3;
 % Parameters
 numFilesSelected = 15;
 pulseNum = 10; % Number of pulses to extract from each file
-pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
+pulseInd = 6; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 15;
 noiseThreshold = 12;
+magnitudeThreshold = 90; %80;
 
 % "Switches" to control the script operation
 findResonances = true;
@@ -171,7 +172,7 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         [~, resWindow(2)] = min(abs(f - 21000));
         windowedSmooth = smoothMicF(resWindow(1):resWindow(2));
 
-        if (windowedSmooth(1) < 80)
+        if (windowedSmooth(1) < magnitudeThreshold)
             continue
         end
 
