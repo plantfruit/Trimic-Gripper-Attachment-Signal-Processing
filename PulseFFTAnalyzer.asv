@@ -11,18 +11,45 @@ grid5x5_mic2 = '5x5 Grid Mic 2';
 grid5x5_mic3 = '5x5 Grid Mic 3';
 grid5x5_mic3old = '5x5 Grid Mic 3 Old';
 
+varobj2_1 = 'Various Objects 2 Mic 1';
+varobj2_2 = 'Various Objects 2 Mic 2';
+varobj2_3 = 'Various Objects 2 Mic 3';
+
+force5x5_1 = 'Force 3 Points Mic 1';
+force5x5_2 = 'Force 3 Points Mic 2';
+force5x5_3 = 'Force 3 Points Mic 3';
+
+grid3x3_mic1 = '3x3 Grid Mic 1';
+grid3x3_mic2 = '3x3 Grid Mic 2';
+grid3x3_mic3 = '3x3 Grid Mic 3';
+
+regX_1_part1 = 'Regression X Mic 1 1st Half';
+regX_1_part2 = 'Regression X Mic 1 2nd Half';
+regX_2 = 'Regression X Mic 2';
+regX_3_part1 = 'Regression X Mic 3 1st Half';
+regX_3_part2 = 'Regression X Mic 3 2nd Half';
+regY_1 = 'Regression Y Mic 1';
+regY_2 = 'Regression Y Mic 2';
+regY_3 = 'Regression Y Mic 3';
+
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = grid5x5_mic3;
+folderPath = regX_1_part1;
 
-% Select the distance trial to analyze
-i = 4;
+% Parameters
+numFilesSelected = 50;
+pulseNum = 10; % Number of pulses to extract from each file
+pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
+filesPerLabel = 15;
+noiseThreshold = 12;
+magnitudeThreshold = 90; %80;
 
 % "Switches" to control the script operation
 findResonances = true;
+trialDuplication = false; % Duplicate the FFTs of each trial, in series after the set, row-wise
 windowModifier = 0;
 transmitSignal = [0 0 0 0 0 1 0 0 0 0 0];
 minpeakHeight = 1000; % 300, previously % 10, previously
@@ -33,9 +60,6 @@ t = length(transmitSignal);
 % For 26 cm tube -> make this 0
 % For 10 cm tube -> make this 2
 minPeakProminence = 2;
-numFilesSelected = 50;
-pulseNum = 10; % Number of pulses to extract from each file
-pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 figDims = [2 2]; %[3 9]; %[3 2];
 %increments = [0.24 0.43];
 
@@ -52,10 +76,6 @@ timeIncrements = [0.22 0.7 0.77];
 %micData = micData(1:find(micData, 1, 'last'));
 
 % Source: https://www.mathworks.com/matlabcentral/answers/411500-how-do-i-read-all-the-files-in-a-folder
-% Please save all files name in symmetrically before doing the operation
-% names for example f1,f2,f3...
-% Save the folder of files in the current directory
-% Pls note the format of files,change it as required
 originalFiles = dir([folderPath '/*.txt']);
 fileNames = originalFiles;
 
@@ -79,7 +99,7 @@ allDiffPresses = zeros(length(fileNames), 100);
 
 allPressFFT = zeros(numFilesSelected * pulseNum, 100);
 
-dirStartInd = 10 * (pulseInd - 1) + 1;
+dirStartInd = filesPerLabel  * (pulseInd - 1) + 1;
 
 pressFFTCounter = 1;
 % Select a group of files from the folder
@@ -103,10 +123,9 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
     chirpIndex = 1; % Maybe change later?
     title(length(peakTimes) + " " + fileName)
 
-    selPeaks = peaks(length(peakTimes) - 2 - pulseNum + 1: length(peakTimes) - 2 - pulseNum + 1 + 20);
-    selLocs = peakLocations(length(peakLocations) - 2 - pulseNum + 1: length(peakLocations) - 2 - pulseNum + 1 + 20);
-    hold on; scatter(selLocs, selPeaks)
-
+    % selPeaks = peaks(length(peakTimes) - 2 - pulseNum + 1: length(peakTimes) - 2 - pulseNum + 1 + 20);
+    % selLocs = peakLocations(length(peakLocations) - 2 - pulseNum + 1: length(peakLocations) - 2 - pulseNum + 1 + 20);
+    % hold on; scatter(selLocs, selPeaks)
 
     startFreqs = zeros(1,8);
     pressFreqs = zeros(1,8);
@@ -151,7 +170,7 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         smoothMicF = smooth(micDataF, smoothingFactor);
 
         % Filter out noisy pulse samples
-        if (std(smoothMicF) < 12)
+        if (std(smoothMicF) < noiseThreshold)
             continue
         end
 
@@ -162,13 +181,11 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         [~, resWindow(2)] = min(abs(f - 21000));
         windowedSmooth = smoothMicF(resWindow(1):resWindow(2));
 
-        % if (windowedSmooth(1) < 80)
-        %     continue
-        % end
+        if (windowedSmooth(1) < magnitudeThreshold)
+            continue
+        end
 
         pulseCounter = pulseCounter + 1;
-
-
 
         % Find the resonance frequencies
         [peakVals, peakLocs] = findpeaks(windowedSmooth, "MinPeakProminence", minPeakProminence, 'MinPeakDistance', 8);
@@ -200,10 +217,16 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
 
         xlabel("Frequency (Hz)"); ylabel("Magnitude");
         title("Microphone Data, Frequency-Domain, " + fileName)
-
     end
 
-    for 
+    % Only do this for the new mic, when we're duplicating the
+    % remainder trials
+    if (trialDuplication == true)
+        for l = 1:pulseNum
+            allPressFFT(pressFFTCounter, 1:length(windowedF)) = allPressFFT(pressFFTCounter - pulseNum,:);
+            pressFFTCounter = pressFFTCounter + 1;
+        end
+    end
 end
 
 % cd ..

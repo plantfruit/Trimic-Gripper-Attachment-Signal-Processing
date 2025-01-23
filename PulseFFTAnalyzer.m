@@ -23,20 +23,29 @@ grid3x3_mic1 = '3x3 Grid Mic 1';
 grid3x3_mic2 = '3x3 Grid Mic 2';
 grid3x3_mic3 = '3x3 Grid Mic 3';
 
+regX_1_part1 = 'Regression X Mic 1 1st Half';
+regX_1_part2 = 'Regression X Mic 1 2nd Half';
+regX_2 = 'Regression X Mic 2';
+regX_3_part1 = 'Regression X Mic 3 1st Half';
+regX_3_part2 = 'Regression X Mic 3 2nd Half';
+regY_1 = 'Regression Y Mic 1';
+regY_2 = 'Regression Y Mic 2';
+regY_3 = 'Regression Y Mic 3';
+
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = grid3x3_mic3;
+folderPath = regX_1_part2;
 
 % Parameters
-numFilesSelected = 15;
+numFilesSelected = 50;
 pulseNum = 10; % Number of pulses to extract from each file
-pulseInd = 6; % Where we start collecting the number of pulses, from cross-correlation indices
-filesPerLabel = 15;
+pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
+filesPerLabel = 10;
 noiseThreshold = 12;
-magnitudeThreshold = 90; %80;
+magnitudeThreshold = 80; %80;
 
 % "Switches" to control the script operation
 findResonances = true;
@@ -177,8 +186,6 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         end
 
         pulseCounter = pulseCounter + 1;
-
-
 
         % Find the resonance frequencies
         [peakVals, peakLocs] = findpeaks(windowedSmooth, "MinPeakProminence", minPeakProminence, 'MinPeakDistance', 8);
