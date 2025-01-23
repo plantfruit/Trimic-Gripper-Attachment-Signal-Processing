@@ -1,8 +1,8 @@
 % For the ML task
 
 pulseNum = 10; % Number of pulses extracted from each file
-fileNum = 10; % Number of trials conducted for each label
-gridSize = 3; % Number of labels, or points in the grid. E.g. If it's a 5x5 grid, we have 25 points
+fileNum = 15; % Number of trials conducted for each label
+gridSize = 9; % Number of labels, or points in the grid. E.g. If it's a 5x5 grid, we have 25 points
 
 labels = zeros(gridSize * fileNum * pulseNum, 1);
 
@@ -13,4 +13,4 @@ for i = 1:gridSize
 end
 
 
-save("trimic1_force_labels.txt", "labels", "-ascii")
+save("3x3_trimic1_labels.txt", "labels", "-ascii")
