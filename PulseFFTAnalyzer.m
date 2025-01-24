@@ -37,15 +37,15 @@ regY_3 = 'Regression Y Mic 3';
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = regX_2;
+folderPath = regY_3;
 
 % Parameters
-numFilesSelected = 50;
+numFilesSelected = 1;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 6; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
-noiseThreshold = 12;
-magnitudeThreshold = 80; %80;
+noiseThreshold = 7;
+magnitudeThreshold = 75; %80;
 
 % "Switches" to control the script operation
 findResonances = true;
