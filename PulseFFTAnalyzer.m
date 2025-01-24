@@ -37,12 +37,12 @@ regY_3 = 'Regression Y Mic 3';
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = regX_1_part2;
+folderPath = regX_2;
 
 % Parameters
 numFilesSelected = 50;
 pulseNum = 10; % Number of pulses to extract from each file
-pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
+pulseInd = 6; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
 noiseThreshold = 12;
 magnitudeThreshold = 80; %80;
