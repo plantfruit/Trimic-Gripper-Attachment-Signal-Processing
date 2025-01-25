@@ -10,6 +10,7 @@ regY_2 = 'Excel Sheets/5x5_regY_2.xlsx';
 regY_3 = 'Excel Sheets/5x5_regY_3.xlsx';
 
 regX = {regX_1, regX_2, regX_3};
+reg
 
 % CONSTANTS
 micNum = 3;
@@ -21,7 +22,7 @@ numRowsPerFile = 10;
 numFilesPerLabel = 10;
 numForces = 3;
 numFilesPerForce = 5;
-labelNum = 9;
+labelNum = 10;
 figDims = [3 3];
 
 cmap = colormap('hsv');
@@ -41,7 +42,7 @@ for k = 1:micNum
     % Prepare for custom legend
     for i = 1:labelNum
         plotColors(i,:) = cmap(round(i * height(cmap)/labelNum),:);
-        plot(NaN, NaN, 'Color', plotColors(i,:), 'LineWidth', 2); % Invisible plots for legend
+        hold on; plot(NaN, NaN, 'Color', plotColors(i,:), 'LineWidth', 2); % Invisible plots for legend
     end
 
     % Get all the files from a lable
@@ -64,6 +65,6 @@ for k = 1:micNum
 
     ylim([50 110])
 
-    legendStrings = "N = " + string(1:1:labelNum);
+    legendStrings = "Distance = " + string(1:1:labelNum);
     legend(legendStrings)
 end

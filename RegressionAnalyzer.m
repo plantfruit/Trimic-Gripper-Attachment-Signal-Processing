@@ -10,12 +10,13 @@ regY_2 = 'Excel Sheets/5x5_regY_2.xlsx';
 regY_3 = 'Excel Sheets/5x5_regY_3.xlsx';
 
 regX = {regX_1, regX_2, regX_3};
+regY = {regY_1, regY_2, regY_3};
 
 % CONSTANTS
 micNum = 3;
 
 % SWITCHES
-fileNames = regX;
+fileNames = regY;
 
 numRowsPerFile = 10;
 numFilesPerLabel = 10;
