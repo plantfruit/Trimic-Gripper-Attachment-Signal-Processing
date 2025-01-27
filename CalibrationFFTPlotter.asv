@@ -1,3 +1,0 @@
-allFiles = readmatrix('Excel Sheets/calibration_middlepoint_5days.xlsx');
-
-avgPulse = 

@@ -8,9 +8,9 @@ labels = zeros(gridSize * fileNum * pulseNum, 1);
 
 for i = 1:gridSize
     for j = 1:fileNum * pulseNum
-        labels((i - 1) * fileNum * pulseNum + j) = i;
+        labels((i - 1) * fileNum * pulseNum + j) = i * 0.3;
     end
 end
 
 
-save("5x5_1_regX_1_cols1to94_labels.txt", "labels", "-ascii")
+save("regression_10point_0_3res.txt", "labels", "-ascii")
