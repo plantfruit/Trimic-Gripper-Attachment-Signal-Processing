@@ -16,7 +16,7 @@ regY = {regY_1, regY_2, regY_3};
 micNum = 3;
 
 % SWITCHES
-fileNames = regY;
+fileNames = regX;
 
 numRowsPerFile = 10;
 numFilesPerLabel = 10;
