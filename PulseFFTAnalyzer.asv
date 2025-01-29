@@ -32,27 +32,24 @@ regY_1 = 'Regression Y Mic 1';
 regY_2 = 'Regression Y Mic 2';
 regY_3 = 'Regression Y Mic 3';
 
-regX_2_1 = 'Regression 2 X Mic 1';
-regX_2_2 = 'Regression 2 X Mic 2';
-regX_2_3 = 'Regression 2 X Mic 3';
-regY_2_1 = 'Regression 2 Y Mic 1';
-regY_2_2 = 'Regression 2 Y Mic 2';
-regY_2_3 = 'Regression 2 Y Mic 3';
+regX_2_1 'Regression 2 X Mic 1';
+regX_2_2
+regX_2_3 
 
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = regX_2_3;
+folderPath = grid3x3_mic1;
 
 % Parameters
-numFilesSelected = 50;
+numFilesSelected = 1;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 6; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
-noiseThreshold = 12;
-magnitudeThreshold = 80; %80;
+noiseThreshold = 7;
+magnitudeThreshold = 75; %80;
 
 % "Switches" to control the script operation
 findResonances = true;
