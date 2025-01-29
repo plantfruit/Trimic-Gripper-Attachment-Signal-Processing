@@ -37,7 +37,7 @@ regY_3 = 'Regression Y Mic 3';
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = regY_3;
+folderPath = grid3x3_mic1;
 
 % Parameters
 numFilesSelected = 1;
