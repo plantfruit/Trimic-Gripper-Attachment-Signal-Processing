@@ -9,14 +9,23 @@ regY_1 = 'Excel Sheets/5x5_regY_1.xlsx';
 regY_2 = 'Excel Sheets/5x5_regY_2.xlsx';
 regY_3 = 'Excel Sheets/5x5_regY_3.xlsx';
 
+regX2_1 = 'Excel Sheets/5x5_2_regX_1.xlsx';
+regX2_2 = 'Excel Sheets/5x5_2_regX_2.xlsx';
+regX2_3 = 'Excel Sheets/5x5_2_regX_3.xlsx';
+regY2_1 = 'Excel Sheets/5x5_2_regY_1.xlsx';
+regY2_2 = 'Excel Sheets/5x5_2_regY_2.xlsx';
+regY2_3 = 'Excel Sheets/5x5_2_regY_3.xlsx';
+
 regX = {regX_1, regX_2, regX_3};
 regY = {regY_1, regY_2, regY_3};
+regX2 = {regX2_1, regX2_2, regX2_3};
+regY2 = {regY2_1, regY2_2, regY2_3};
 
 % CONSTANTS
 micNum = 3;
 
 % SWITCHES
-fileNames = regX;
+fileNames = regX2 ;
 
 numRowsPerFile = 10;
 numFilesPerLabel = 10;

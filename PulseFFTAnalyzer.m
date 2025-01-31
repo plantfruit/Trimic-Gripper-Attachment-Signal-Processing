@@ -39,19 +39,21 @@ regY_2_1 = 'Regression 2 Y Mic 1';
 regY_2_2 = 'Regression 2 Y Mic 2';
 regY_2_3 = 'Regression 2 Y Mic 3';
 
+noiseTest = 'Noise Test Jan 29';
+
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = regY_2_3;
+folderPath = noiseTest;
 
 % Parameters
-numFilesSelected = 100;
+numFilesSelected = 5;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
-noiseThreshold = 12;
+noiseThreshold = 10;
 magnitudeThreshold = 80; %80;
 
 % "Switches" to control the script operation

@@ -27,12 +27,13 @@ force5x5_3 = 'Force 3 Points Mic 3';
 folderPath = force5x5_2;
 
 % Parameters
-numFilesSelected = 30;
-pulseNum = 10; % Number of pulses to extract from each file
+numFilesSelected = 100;
+pulseNum = 20; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
-noiseThreshold = 12;
+noiseThreshold = 10;
 
-fileName = 'Various Objects Mic 3/1646478505197.txt';
+fileName = '1738261222033.txt';
+%'Various Objects Mic 3/1646478505197.txt';
 %'5x5 Grid Mic 1/1736908122142.txt';
 %'3x3 Grid Mic 1/1737492087629.txt';
 %'Various Objects Mic 1/1737326303453.txt';
@@ -205,6 +206,11 @@ while pulseCounter < pulseNum + 1
     %allPressFFT(k, 1:length(windowedF)) = windowedF.';
     allPressFFT(pressFFTCounter, 1:length(windowedF)) = windowedF.';
     pressFFTCounter = pressFFTCounter + 1;
+
+    subplot(figDims(1), figDims(2), 3)
+    hold on; plot(f(1:resWindow(2)-resWindow(1) + 1), micDataF(resWindow(1):resWindow(2))); 
+    ylim([0 140])
+
 
     subplot(figDims(1), figDims(2), 4)
     hold on; plot(f(1:resWindow(2)-resWindow(1) + 1), windowedF); %hold on; scatter(resonanceFrequencies, peakVals)
