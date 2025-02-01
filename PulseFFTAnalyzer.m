@@ -41,20 +41,33 @@ regY_2_3 = 'Regression 2 Y Mic 3';
 
 noiseTest = 'Noise Test Jan 29';
 
+white_vol1_1 = 'BG White Vol 1 Mic 1';
+white_vol1_2 = 'BG White Vol 1 Mic 2';
+white_vol1_3 = 'BG White Vol 1 Mic 3';
+white_vol2_1 = 'BG White Vol 2 Mic 1';
+white_vol2_2 = 'BG White Vol 2 Mic 2';
+white_vol2_3 = 'BG White Vol 2 Mic 3';
+white_vol3_1 = 'BG White Vol 3 Mic 1';
+white_vol3_2 = 'BG White Vol 3 Mic 2';
+white_vol3_3 = 'BG White Vol 3 Mic 3';
+
+
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = noiseTest;
+folderPath = white_vol1_3;
 
 % Parameters
-numFilesSelected = 5;
+numFilesSelected = 90;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
 noiseThreshold = 10;
+noiseThreshold2 = 3;
 magnitudeThreshold = 80; %80;
+filterOn = true;
 
 % "Switches" to control the script operation
 findResonances = true;
@@ -149,6 +162,12 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         chirpIndex = length(peakTimes) - 1 - indexCounter;
         indexCounter = indexCounter + 1;
 
+        % if (filterOn == true)
+        %     if (peaks(chirpIndex) < 5000)
+        %         continue
+        %     end
+        % end
+
         % Extract the pulse and its reflections
         % Do this only at the specified time increments: roughly quarter of
         % the way through (resting state) or halfway through (pressdown
@@ -179,10 +198,23 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         smoothMicF = smooth(micDataF, smoothingFactor);
 
         % Filter out noisy pulse samples
-        if (std(smoothMicF) < noiseThreshold)
-            continue
+        if (filterOn == true)
+            if (std(smoothMicF) < noiseThreshold)
+                continue
+            end
+
+            if (std(smoothMicF(130:150)) < noiseThreshold2)
+                continue
+            end
+
+            if (max(smoothMicF(100:150)) < 87)
+                continue
+            end
         end
 
+        % if (range(smoothMicF) < 30)
+        %     continue
+        % end
 
         % Window the FFT graph so only the first 8 (or possibly 9)
         % resonances are displayed
@@ -190,21 +222,16 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         [~, resWindow(2)] = min(abs(f - 21000));
         windowedSmooth = smoothMicF(resWindow(1):resWindow(2));
 
-        if (windowedSmooth(1) < magnitudeThreshold)
-            continue
+        if (filterOn == true)
+            if (windowedSmooth(1) < magnitudeThreshold)
+                continue
+            end
         end
 
         pulseCounter = pulseCounter + 1;
 
         % Find the resonance frequencies
         [peakVals, peakLocs] = findpeaks(windowedSmooth, "MinPeakProminence", minPeakProminence, 'MinPeakDistance', 8);
-
-        % Plot comparison of unsmoothed and the smoothed FFT
-        % figure
-        % subplot(2,1,1)
-        % plot(f, micDataF); xlim([0 20e3]); ylim([0 140])
-        % subplot(2,1,2)
-        % plot(f, smoothMicF); xlim([0 20e3]); ylim([0 140])
 
         resonanceFrequencies = f(peakLocs);
         realResonanceFrequencies = resonanceFrequencies + f(resWindow(1));
@@ -219,10 +246,9 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         pressFFTCounter = pressFFTCounter + 1;
 
         subplot(figDims(1), figDims(2), 4)
-        hold on; plot(f(1:resWindow(2)-resWindow(1) + 1), windowedF); %hold on; scatter(resonanceFrequencies, peakVals)
+        hold on; g = plot(f(1:resWindow(2)-resWindow(1) + 1), windowedF); %hold on; scatter(resonanceFrequencies, peakVals)
         ylim([0 140])
         % subplotCounter = subplotCounter + 1;
-
 
         xlabel("Frequency (Hz)"); ylabel("Magnitude");
         title("Microphone Data, Frequency-Domain, " + fileName)
