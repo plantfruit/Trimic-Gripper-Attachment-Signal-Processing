@@ -57,16 +57,17 @@ white_vol3_3 = 'BG White Vol 3 Mic 3';
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = white_vol1_3;
+folderPath = white_vol3_3;
 
 % Parameters
 numFilesSelected = 90;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
-noiseThreshold = 10;
+noiseThreshold = 9;
 noiseThreshold2 = 3;
 magnitudeThreshold = 80; %80;
+magnitudeThreshold2 = 75;
 filterOn = true;
 
 % "Switches" to control the script operation
@@ -159,11 +160,12 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
     % Iterate through all delta pulses detected by the cross-correlation
     while pulseCounter < pulseNum + 1
         % chirpIndex = length(peakTimes) - 2 - pulseNum + i;
+        % chirpIndex = indexCounter;
         chirpIndex = length(peakTimes) - 1 - indexCounter;
         indexCounter = indexCounter + 1;
 
         % if (filterOn == true)
-        %     if (peaks(chirpIndex) < 5000)
+        %     if (peaks(chirpIndex) < 3000)
         %         continue
         %     end
         % end
@@ -205,11 +207,7 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
 
             if (std(smoothMicF(130:150)) < noiseThreshold2)
                 continue
-            end
-
-            if (max(smoothMicF(100:150)) < 87)
-                continue
-            end
+            end           
         end
 
         % if (range(smoothMicF) < 30)
@@ -223,6 +221,10 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         windowedSmooth = smoothMicF(resWindow(1):resWindow(2));
 
         if (filterOn == true)
+            if (max(windowedSmooth(100:150)) < magnitudeThreshold2)
+                continue
+            end
+
             if (windowedSmooth(1) < magnitudeThreshold)
                 continue
             end
