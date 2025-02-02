@@ -41,6 +41,9 @@ regY_2_3 = 'Regression 2 Y Mic 3';
 
 noiseTest = 'Noise Test Jan 29';
 
+noBG_1 = 'BG Silent Mic 1';
+noBG_2 = 'BG Silent Mic 2';
+noBG_3 = 'BG Silent Mic 3';
 white_vol1_1 = 'BG White Vol 1 Mic 1';
 white_vol1_2 = 'BG White Vol 1 Mic 2';
 white_vol1_3 = 'BG White Vol 1 Mic 3';
@@ -51,20 +54,19 @@ white_vol3_1 = 'BG White Vol 3 Mic 1';
 white_vol3_2 = 'BG White Vol 3 Mic 2';
 white_vol3_3 = 'BG White Vol 3 Mic 3';
 
-
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = white_vol1_3;
+folderPath = noBG_3;
 
 % Parameters
-numFilesSelected = 20;
+numFilesSelected = 90;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
-noiseThreshold = 9;
+noiseThreshold = 10;
 noiseThreshold2 = 3;
 magnitudeThreshold = 80; %80;
 magnitudeThreshold2 = 75;
