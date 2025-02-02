@@ -57,10 +57,10 @@ white_vol3_3 = 'BG White Vol 3 Mic 3';
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = white_vol3_3;
+folderPath = white_vol1_3;
 
 % Parameters
-numFilesSelected = 90;
+numFilesSelected = 20;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
