@@ -63,17 +63,17 @@ white_vol3_3 = 'BG White Vol 3 Mic 3';
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = varobj3_3;
+folderPath = grid5x5_mic3;
 
 % Parameters
-numFilesSelected = 60;
+numFilesSelected = 30;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
-noiseThreshold = 6;
-noiseThreshold2 = 2;
-magnitudeThreshold = 80; %80;
-magnitudeThreshold2 = 80;
+noiseThreshold = 10;
+noiseThreshold2 = 3;
+magnitudeThreshold = 70; %80;
+magnitudeThreshold2 = 70;
 filterOn = true;
 
 % "Switches" to control the script operation
