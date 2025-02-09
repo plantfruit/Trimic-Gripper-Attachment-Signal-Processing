@@ -8,7 +8,10 @@ grid5x5_1_1re = 'Excel Sheets/5x5_trimic_1re.xlsx';
 grid5x5_1_2re = 'Excel Sheets/5x5_trimic_2re.xlsx';
 grid5x5_1_3re = 'Excel Sheets/5x5_trimic_3re.xlsx';
 
+tube1D_res05 = 'Excel Sheets/1Dtube_05res.xlsx';
+
 grid5x5_1re = {grid5x5_1_1re, grid5x5_1_2re, grid5x5_1_3re};
+tube1D_res05_listForm = {tube1D_res05};
 
 % CONSTANTS
 pulseNum = 10; % Number of pulses extracted from each file
@@ -23,7 +26,8 @@ plotDiffColors = false;
 plotMean = false;
 plotFileMean = true;
 doingSubplots = true;
-fileNames = grid5x5_1re;
+fileNames = tube1D_res05_listForm; %grid5x5_1re;
+
 % {force_1, force_2, force_3};
 %{varobj2_1, varobj2_2, varobj2_3};
 % {grid5x5_1_1; grid5x5_1_2; grid5x5_1_3};
@@ -120,7 +124,10 @@ end
 grid5x5_1 = '5x5 Grid Mic 1';
 grid5x5_2 = '5x5 Grid Mic 2';
 grid5x5_3 = '5x5 Grid Mic 3';
-folderNames = {grid5x5_1, grid5x5_2, grid5x5_3};
+grid5x5 = {grid5x5_1, grid5x5_2, grid5x5_3};
+
+
+folderNames = grid5x5;
 
 % Parameters
 Fs = 48e3;
@@ -149,17 +156,16 @@ minPeakProminence = 2;
 % Large arrays that have been pre-allocated to store results calculated
 % during the primary loop
 allStartFFT = zeros(numFilesSelected * pulseNum, 150);
-allPressFFT = zeros(numFilesSelected * pulseNum, 150);
-allChirpSegments = zeros(micNum * numFilesSelected * pulseNum, 450);
+allPressFFT = zeros(micNum * numFilesSelected * pulseNum, 150);
+allChirpSegments = zeros(micNum * labelNum * filesPerLabel * pulseNum, 450);
 
-
+pressFFTCounter = 1;
+segmentCounter = 1;
 for m = 1:micNum
     folderPath = folderNames{m};
     originalFiles = dir([folderPath '/*.txt']);
 
     dirStartInd = filesPerLabel  * (pulseInd - 1) + 1;
-    pressFFTCounter = 1;
-    segmentCounter = 1;
 
     for k = dirStartInd:dirStartInd + numFilesSelected - 1
         fileName = [folderPath '/' originalFiles(k).name];
@@ -173,7 +179,6 @@ for m = 1:micNum
         peakTimes = -lags(peakLocations);
         peakTimes = abs(sort(peakTimes));
         chirpIndex = 1; % Maybe change later?
-        title(length(peakTimes) + " " + fileName)
 
         pulseCounter = 1;
         indexCounter = 1;
@@ -257,7 +262,7 @@ for m = 1:micNum
 
     for i = 1:labelNum
         dataBlockLen = pulseNum * fileNum;
-        dataBlockIndBeg = (i-1) * dataBlockLen  + 1;
+        dataBlockIndBeg = (m-1) * dataBlockLen * labelNum + (i-1) * dataBlockLen  + 1;
         dataBlockIndEnd = dataBlockIndBeg + dataBlockLen - 1;
 
         dataBlock = allChirpSegments(dataBlockIndBeg:dataBlockIndEnd,:);
@@ -266,7 +271,7 @@ for m = 1:micNum
 
         subplot(figDims(1), figDims(2), i); hold on; plot(avgChirpSegment);
         title(i)
-        ylim([-2.2e3 2.2e3])
+        ylim([-6.2e3 6.2e3])
     end
 
     pulseCounter = 1;

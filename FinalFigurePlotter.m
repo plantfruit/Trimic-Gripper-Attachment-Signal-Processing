@@ -8,14 +8,17 @@ grid5x5_1_1re = 'Excel Sheets/5x5_trimic_1re.xlsx';
 grid5x5_1_2re = 'Excel Sheets/5x5_trimic_2re.xlsx';
 grid5x5_1_3re = 'Excel Sheets/5x5_trimic_3re.xlsx';
 
+tube1D_res05 = 'Excel Sheets/1Dtube_05res_re.xlsx';
+
 grid5x5_1re = {grid5x5_1_1re, grid5x5_1_2re, grid5x5_1_3re};
+tube1D_res05_listForm = {tube1D_res05};
 
 % CONSTANTS
 pulseNum = 10; % Number of pulses extracted from each file
 fileNum = 10; % Number of files for each label
-labelNum = 25; % Number of data points from the grid in experiment
-micNum = 3;
-figDims = [5 5];
+labelNum = 17; %25; % Number of data points from the grid in experiment
+micNum = 1; %3;
+figDims = [3 6]; %[5 5];
 
 % SWITCHES
 plotLabelFirst = false;
@@ -23,7 +26,8 @@ plotDiffColors = false;
 plotMean = false;
 plotFileMean = true;
 doingSubplots = true;
-fileNames = grid5x5_1re;
+fileNames = tube1D_res05_listForm; %grid5x5_1re;
+
 % {force_1, force_2, force_3};
 %{varobj2_1, varobj2_2, varobj2_3};
 % {grid5x5_1_1; grid5x5_1_2; grid5x5_1_3};
@@ -58,8 +62,8 @@ for k = 1:micNum
     for i = 1:labelNum
         if (doingSubplots == true)
             subplot(figDims(1), figDims(2), i)
-            title(i)
-            ylim([30 110])
+            title(i * 0.5 + 0.5)
+            ylim([0 120]) % ylim([30 110])
 
             for p = 1:colorHeight
                 plotColors(p,:) = cmap(round(p * height(cmap)/colorHeight),:);
@@ -101,7 +105,7 @@ for k = 1:micNum
 
     % Create legend based on the colormap
     if (doingSubplots == false)
-        legendStrings = "Distance = " + string(1:1:labelNum);
+        legendStrings = "Distance = " + string(1:1:labelNum );
         legend(legendStrings)
     end
 
@@ -110,7 +114,7 @@ for k = 1:micNum
         legend(legendStrings);
     end
 
-    ylim([30 110])
+    % ylim([30 110])
 end
 
 
@@ -266,7 +270,7 @@ for m = 1:micNum
         avgChirpSegment = mean(dataBlock, 1);
 
         subplot(figDims(1), figDims(2), i); hold on; plot(avgChirpSegment);
-        title(i)
+        title(i * 0.5 + 0.5)
         ylim([-6.2e3 6.2e3])
     end
 
@@ -282,8 +286,8 @@ for m = 1:micNum
 
         avgChirpSegment = mean(dataBlock, 1);
 
-        subplot(figDims(1), figDims(2), i); hold on; spectrogram(avgChirpSegment);
-        title(i)
+        subplot(figDims(1), figDims(2), i); hold on; pspectrum(avgChirpSegment); %spectrogram(avgChirpSegment);
+        title(i * 0.5 + 0.5)
     end
 end
 
