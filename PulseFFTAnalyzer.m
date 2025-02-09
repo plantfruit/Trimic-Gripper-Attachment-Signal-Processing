@@ -68,18 +68,18 @@ rubberTube_res05 = 'Rubber Tube 0.5 Res';
 folderPath = rubberTube_res05;
 
 % Parameters
-numFilesSelected = 50;
+numFilesSelected = 10;
 pulseNum = 10; % Number of pulses to extract from each file
-pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
+pulseInd = 17; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
 noiseThreshold = 10;
 noiseThreshold2 = 3;
-magnitudeThreshold = 70; %70; %80;
-magnitudeThreshold2 = 50; %70;
+magnitudeThreshold = 30; %70; %80;
+magnitudeThreshold2 = 30; %70;
 filterOn = true;
 tubeFilter = 17e3; % Set to -1 if you want to turn it off. For rubber tube data only.
 %[5000 21000]; <- 2D surface
-fftWindow = [2500 20000]; 
+fftWindow = [2500 20000];
 
 % "Switches" to control the script operation
 findResonances = true;
@@ -105,9 +105,6 @@ timeIncrements = [0.22 0.7 0.77];
 % Go to the directory containing data files (other directories are
 % commented out
 % cd(folderPath);
-
-% Excise trailing zeros
-%micData = micData(1:find(micData, 1, 'last'));
 
 % Source: https://www.mathworks.com/matlabcentral/answers/411500-how-do-i-read-all-the-files-in-a-folder
 originalFiles = dir([folderPath '/*.txt']);
@@ -144,6 +141,9 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
 
     micData = readmatrix(fileName);
 
+    % Excise trailing zeros
+    micData = micData(1:find(micData, 1, 'last'));
+
     [r, lags] = xcorr(transmitSignal, micData);
     [peaks, peakLocations] = findpeaks(r, 'MinPeakHeight', minpeakHeight, 'MinPeakDistance', gapTime * Fs * 0.5); % length(t) / 2);
     % MinPeakDistance: .wav - 300, .mp3 - 10
@@ -174,14 +174,18 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
     while pulseCounter < pulseNum + 1
         % chirpIndex = length(peakTimes) - 2 - pulseNum + i;
         % chirpIndex = indexCounter;
-        chirpIndex = length(peakTimes) - 1 - indexCounter;
+        if (tubeFilter ~= -1)
+            chirpIndex = length(peakTimes) - round(0.35 * length(peakTimes)) - 1 - indexCounter;            
+        else
+            chirpIndex = length(peakTimes) - 1 - indexCounter;
+        end
         indexCounter = indexCounter + 1;
 
         if (filterOn == true)
-            if (tubeFilter ~= -1 && peaks(chirpIndex) > tubeFilter)      
-                filterCounts(1) = filterCounts(1) + 1;
-                continue
-            end
+            % if (tubeFilter ~= -1 && peaks(chirpIndex) > tubeFilter)
+            %     filterCounts(1) = filterCounts(1) + 1;
+            %     continue
+            % end
         end
 
         % Extract the pulse and its reflections
@@ -223,7 +227,7 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
             if (std(smoothMicF(120:150)) < noiseThreshold2) % 130:150
                 filterCounts(3) = filterCounts(3) + 1;
                 continue
-            end           
+            end
         end
 
         % if (range(smoothMicF) < 30)
