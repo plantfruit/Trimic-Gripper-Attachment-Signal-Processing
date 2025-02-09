@@ -58,15 +58,17 @@ white_vol3_1 = 'BG White Vol 3 Mic 1';
 white_vol3_2 = 'BG White Vol 3 Mic 2';
 white_vol3_3 = 'BG White Vol 3 Mic 3';
 
+rubberTube_res05 = 'Rubber Tube 0.5 Res';
+
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = grid5x5_mic3;
+folderPath = rubberTube_res05;
 
 % Parameters
-numFilesSelected = 30;
+numFilesSelected = 50;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
@@ -170,11 +172,11 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         chirpIndex = length(peakTimes) - 1 - indexCounter;
         indexCounter = indexCounter + 1;
 
-        % if (filterOn == true)
-        %     if (peaks(chirpIndex) < 3000)
-        %         continue
-        %     end
-        % end
+        if (filterOn == true)
+            if (tubeFilter ~= -1 && peaks(chirpIndex) > tubeFilter)
+                continue
+            end
+        end
 
         % Extract the pulse and its reflections
         % Do this only at the specified time increments: roughly quarter of
