@@ -58,25 +58,28 @@ white_vol3_1 = 'BG White Vol 3 Mic 1';
 white_vol3_2 = 'BG White Vol 3 Mic 2';
 white_vol3_3 = 'BG White Vol 3 Mic 3';
 
-
+rubberTube_res05 = 'Rubber Tube 0.5 Res';
 
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = grid5x5_mic3;
+folderPath = rubberTube_res05;
 
 % Parameters
-numFilesSelected = 30;
+numFilesSelected = 50;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
 noiseThreshold = 10;
 noiseThreshold2 = 3;
-magnitudeThreshold = 70; %80;
-magnitudeThreshold2 = 70;
+magnitudeThreshold = 30; %70; %80;
+magnitudeThreshold2 = 90; %70;
 filterOn = true;
+tubeFilter = 7000; % Set to -1 if you want to turn it off. For rubber tube data only.
+%[5000 21000]; <- 2D surface
+fftWindow = [2500 20000]; 
 
 % "Switches" to control the script operation
 findResonances = true;
@@ -172,11 +175,11 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         chirpIndex = length(peakTimes) - 1 - indexCounter;
         indexCounter = indexCounter + 1;
 
-        % if (filterOn == true)
-        %     if (peaks(chirpIndex) < 3000)
-        %         continue
-        %     end
-        % end
+        if (filterOn == true)
+            if (tubeFilter ~= -1 && peaks(chirpIndex) > tubeFilter)                
+                continue
+            end
+        end
 
         % Extract the pulse and its reflections
         % Do this only at the specified time increments: roughly quarter of
@@ -224,8 +227,8 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
 
         % Window the FFT graph so only the first 8 (or possibly 9)
         % resonances are displayed
-        [~, resWindow(1)] = min(abs(f - 5000)); % - windF1
-        [~, resWindow(2)] = min(abs(f - 21000));
+        [~, resWindow(1)] = min(abs(f - fftWindow(1))); % - windF1
+        [~, resWindow(2)] = min(abs(f - fftWindow(2)));
         windowedSmooth = smoothMicF(resWindow(1):resWindow(2));
 
         if (filterOn == true)

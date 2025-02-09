@@ -74,9 +74,12 @@ pulseInd = 1; % Where we start collecting the number of pulses, from cross-corre
 filesPerLabel = 10;
 noiseThreshold = 10;
 noiseThreshold2 = 3;
-magnitudeThreshold = 70; %80;
-magnitudeThreshold2 = 70;
+magnitudeThreshold = 70; %70; %80;
+magnitudeThreshold2 = 50; %70;
 filterOn = true;
+tubeFilter = 17e3; % Set to -1 if you want to turn it off. For rubber tube data only.
+%[5000 21000]; <- 2D surface
+fftWindow = [2500 20000]; 
 
 % "Switches" to control the script operation
 findResonances = true;
@@ -133,6 +136,8 @@ allPressFFT = zeros(numFilesSelected * pulseNum, 100);
 dirStartInd = filesPerLabel  * (pulseInd - 1) + 1;
 
 pressFFTCounter = 1;
+filterCounts = zeros(1, 5);
+
 % Select a group of files from the folder
 for k = dirStartInd:dirStartInd + numFilesSelected - 1
     fileName = [folderPath '/' originalFiles(k).name];
@@ -173,7 +178,8 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         indexCounter = indexCounter + 1;
 
         if (filterOn == true)
-            if (tubeFilter ~= -1 && peaks(chirpIndex) > tubeFilter)
+            if (tubeFilter ~= -1 && peaks(chirpIndex) > tubeFilter)      
+                filterCounts(1) = filterCounts(1) + 1;
                 continue
             end
         end
@@ -210,10 +216,12 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         % Filter out noisy pulse samples
         if (filterOn == true)
             if (std(smoothMicF) < noiseThreshold)
+                filterCounts(2) = filterCounts(2) + 1;
                 continue
             end
 
             if (std(smoothMicF(120:150)) < noiseThreshold2) % 130:150
+                filterCounts(3) = filterCounts(3) + 1;
                 continue
             end           
         end
@@ -224,16 +232,18 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
 
         % Window the FFT graph so only the first 8 (or possibly 9)
         % resonances are displayed
-        [~, resWindow(1)] = min(abs(f - 5000)); % - windF1
-        [~, resWindow(2)] = min(abs(f - 21000));
+        [~, resWindow(1)] = min(abs(f - fftWindow(1))); % - windF1
+        [~, resWindow(2)] = min(abs(f - fftWindow(2)));
         windowedSmooth = smoothMicF(resWindow(1):resWindow(2));
 
         if (filterOn == true)
             if (max(windowedSmooth(100:150)) < magnitudeThreshold2)
+                filterCounts(4) = filterCounts(4) + 1;
                 continue
             end
 
             if (windowedSmooth(1) < magnitudeThreshold)
+                filterCounts(5) = filterCounts(5) + 1;
                 continue
             end
         end
@@ -262,6 +272,9 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
 
         xlabel("Frequency (Hz)"); ylabel("Magnitude");
         title("Microphone Data, Frequency-Domain, " + fileName)
+
+        subplot(figDims(1), figDims(2), 1)
+        hold on; plot(peakLocations(chirpIndex), peaks(chirpIndex), 'r.', 'LineWidth', 2, 'MarkerSize', 25);
     end
 
     % Only do this for the new mic, when we're duplicating the
