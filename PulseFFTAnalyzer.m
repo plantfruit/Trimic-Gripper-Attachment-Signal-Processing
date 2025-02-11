@@ -59,25 +59,26 @@ white_vol3_2 = 'BG White Vol 3 Mic 2';
 white_vol3_3 = 'BG White Vol 3 Mic 3';
 
 rubberTube_res05 = 'Rubber Tube 0.5 Res';
+rubberTube_6obj = 'Rubber Tube 6 Objects';
 
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = rubberTube_res05;
+folderPath = rubberTube_6obj;
 
 % Parameters
 numFilesSelected = 10;
 pulseNum = 10; % Number of pulses to extract from each file
-pulseInd = 17; % Where we start collecting the number of pulses, from cross-correlation indices
+pulseInd = 3; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
 noiseThreshold = 10;
-noiseThreshold2 = 3;
+noiseThreshold2 = 2;
 magnitudeThreshold = 30; %70; %80;
 magnitudeThreshold2 = 30; %70;
 filterOn = true;
-tubeFilter = 17e3; % Set to -1 if you want to turn it off. For rubber tube data only.
+tubeFilter = -1; %17e3; % Set to -1 if you want to turn it off. For rubber tube data only.
 %[5000 21000]; <- 2D surface
 fftWindow = [2500 20000];
 
