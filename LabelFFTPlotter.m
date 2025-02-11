@@ -24,6 +24,10 @@ BGwhite_vol3_1 = 'Excel Sheets/BGwhite_vol3_1';
 BGwhite_vol3_2 = 'Excel Sheets/BGwhite_vol3_2';
 BGwhite_vol3_3 = 'Excel Sheets/BGwhite_vol3_3';
 
+grid5x5_1_1re = 'Excel Sheets/5x5_trimic_1re.xlsx';
+grid5x5_1_2re = 'Excel Sheets/5x5_trimic_2re.xlsx';
+grid5x5_1_3re = 'Excel Sheets/5x5_trimic_3re.xlsx';
+
 BGwhite_vol1 = {BGwhite_vol1_1, BGwhite_vol1_2, BGwhite_vol1_3};
 BGwhite_vol2 = {BGwhite_vol2_1, BGwhite_vol2_2, BGwhite_vol2_3};
 BGwhite_vol3 = {BGwhite_vol3_1, BGwhite_vol3_2, BGwhite_vol3_3};
@@ -32,20 +36,22 @@ BGwhite_mic1 = {BGwhite_vol1_1, BGwhite_vol2_1, BGwhite_vol3_1};
 BGwhite_mic2 = {BGwhite_vol1_2, BGwhite_vol2_2, BGwhite_vol3_2};
 BGwhite_mic3 = {BGwhite_vol1_3, BGwhite_vol2_3, BGwhite_vol3_3};
 
+grid5x5_re = {grid5x5_1_1re, grid5x5_1_2re, grid5x5_1_3re};
+
 % CONSTANTS
 pulseNum = 10; % Number of pulses extracted from each file
 fileNum = 10; % Number of files for each label
-labelNum = 9; % Number of data points from the grid in experiment
+labelNum = 25; % Number of data points from the grid in experiment
 micNum = 3;
-figDims = [3 3];
+figDims = [5 5];
 
 % SWITCHES
 plotLabelFirst = true;
-plotMean = false;
+plotMean = true;
 plotFileMean = true;
 doingSubplots = true;
-fileName = grid5x5_1_1;
-fileNames = BGwhite_mic3;
+% fileName = grid5x5_1_1;
+fileNames = grid5x5_re;
 % {force_1, force_2, force_3};
 %{varobj2_1, varobj2_2, varobj2_3};
 % {grid5x5_1_1; grid5x5_1_2; grid5x5_1_3};
