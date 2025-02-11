@@ -195,7 +195,7 @@ for i = 1:labelNum
 
     avgChirpSegment = mean(dataBlock, 1);
 
-    subplot(figDims(1), figDims(2), subplotCounter); hold on; spectrogram(avgChirpSegment);
+    subplot(figDims(1), figDims(2), subplotCounter); hold on; pspectrum(avgChirpSegment, 'spectrogram');
     title(i)
 
     subplotCounter = subplotCounter + 1;

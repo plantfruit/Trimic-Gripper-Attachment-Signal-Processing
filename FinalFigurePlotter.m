@@ -13,16 +13,18 @@ grid5x5_3 = '5x5 Grid Mic 3';
 grid5x5 = {grid5x5_1, grid5x5_2, grid5x5_3};
 
 tube1D_res05 = 'Excel Sheets/1Dtube_05res_re.xlsx';
+tube1D_res05raw = 'Rubber Tube 0.5 Res';
 
 grid5x5_1re = {grid5x5_1_1re, grid5x5_1_2re, grid5x5_1_3re};
 tube1D_res05_listForm = {tube1D_res05};
+tube1D_res05raw_listForm = {tube1D_res05raw};
 
 % CONSTANTS
 pulseNum = 10; % Number of pulses extracted from each file
 fileNum = 10; % Number of files for each label
-labelNum = 25; %17; % Number of data points from the grid in experiment
-micNum = 3; %1;
-figDims = [5 5]; %[3 6];
+labelNum = 17; %25; % Number of data points from the grid in experiment
+micNum = 1; %3;
+figDims = [3 6]; %[5 5];
 
 % SWITCHES
 plotLabelFirst = false;
@@ -38,7 +40,7 @@ plotSpectrogram = true;
 fileNames = tube1D_res05_listForm; %grid5x5_1re;
 
 % Time Domain (and Spectrogram)
-folderNames = grid5x5;
+folderNames = tube1D_res05raw_listForm; %grid5x5;
 
 % {force_1, force_2, force_3};
 %{varobj2_1, varobj2_2, varobj2_3};
@@ -145,6 +147,7 @@ noiseThreshold = 10;
 noiseThreshold2 = 3;
 magnitudeThreshold = 70; %80;
 magnitudeThreshold2 = 70;
+tubeFilter = 17e3;
 filterOn = true;
 
 % "Switches" to control the script operation
@@ -174,7 +177,7 @@ for m = 1:micNum
 
     dirStartInd = filesPerLabel  * (pulseInd - 1) + 1;
 
-    for k = dirStartInd:dirStartInd + numFilesSelected - 1
+    for k = 1:length(originalFiles) %dirStartInd:dirStartInd + numFilesSelected - 1
         fileName = [folderPath '/' originalFiles(k).name];
 
         micData = readmatrix(fileName);
@@ -191,7 +194,12 @@ for m = 1:micNum
         indexCounter = 1;
         % Iterate through all delta pulses detected by the cross-correlation
         while pulseCounter < pulseNum + 1
-            chirpIndex = length(peakTimes) - 1 - indexCounter;
+            if (tubeFilter ~= -1)
+                chirpIndex = length(peakTimes) - round(0.4 * length(peakTimes)) - 1 - indexCounter;
+            else
+                chirpIndex = length(peakTimes) - 1 - indexCounter;
+            end
+
             indexCounter = indexCounter + 1;
 
             % Extract the pulse and its reflections
