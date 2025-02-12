@@ -14,6 +14,10 @@ grid5x5 = {grid5x5_1, grid5x5_2, grid5x5_3};
 
 tube1D_res05 = 'Excel Sheets/1Dtube_05res_re.xlsx';
 tube1D_res05raw = 'Rubber Tube 0.5 Res';
+tube1D_unpressed = 'MAT Files/1Dtube_unpressedFFT.mat';
+
+grid5x5FFT = '2D_5x5controlFFT.mat';
+grid5x5Time = '2D_5x5ControlTime.mat';
 
 grid5x5_1re = {grid5x5_1_1re, grid5x5_1_2re, grid5x5_1_3re};
 tube1D_res05_listForm = {tube1D_res05};
@@ -22,25 +26,26 @@ tube1D_res05raw_listForm = {tube1D_res05raw};
 % CONSTANTS
 pulseNum = 10; % Number of pulses extracted from each file
 fileNum = 10; % Number of files for each label
-labelNum = 17; %25; % Number of data points from the grid in experiment
-micNum = 1; %3;
-figDims = [3 6]; %[5 5];
+% Number of data points from the grid in experiment
+labelNum = 25; %25; 17
+micNum = 3; %3;
+figDims = [3 6]; %[5 5]; [3 6];
 
 % SWITCHES
 plotLabelFirst = false;
 plotDiffColors = false;
-plotMean = false;
-plotFileMean = true;
+plotMean = true;
+plotFileMean = false;
 doingSubplots = true;
-plotFFT = false;
+plotFFT = true;
 plotTime = false;
-plotSpectrogram = true;
+plotSpectrogram = false;
 
 % FFT
 fileNames = tube1D_res05_listForm; %grid5x5_1re;
 
 % Time Domain (and Spectrogram)
-folderNames = tube1D_res05raw_listForm; %grid5x5;
+folderNames = grid5x5_1re; %grid5x5;
 
 % {force_1, force_2, force_3};
 %{varobj2_1, varobj2_2, varobj2_3};
@@ -70,7 +75,7 @@ if (plotFFT == true)
         % Create colormap for different plots
         for i = 1:colorHeight
             plotColors(i,:) = cmap(round(i * height(cmap)/colorHeight),:);
-            hold on; plot(NaN, NaN, 'Color', plotColors(i,:), 'LineWidth', 2); % Invisible plots for legend
+            % hold on; plot(NaN, NaN, 'Color', plotColors(i,:), 'LineWidth', 2); % Invisible plots for legend
         end
 
         % Iterate through the distances
@@ -82,7 +87,7 @@ if (plotFFT == true)
 
                 for p = 1:colorHeight
                     plotColors(p,:) = cmap(round(p * height(cmap)/colorHeight),:);
-                    hold on; plot(NaN, NaN, 'Color', plotColors(p,:), 'LineWidth', 2); % Invisible plots for legend
+                    % hold on; plot(NaN, NaN, 'Color', plotColors(p,:), 'LineWidth', 2); % Invisible plots for legend
                 end
             end
 
@@ -95,7 +100,9 @@ if (plotFFT == true)
 
             hold on
             if (plotMean == true) % Mean of all pulses for the label
-                g = plot(mean(dataBlock, 1), 'Color', plotColors(k,:));
+                g = plot(mean(dataBlock, 1)); %, 'Color', plotColors(k,:));
+                % hold on;
+                % plot(unpressedFFT); %, 'Color', plotColors(k + 1,:))
             elseif (plotFileMean == true) % Mean of each trial (every group of pulses per trial)
                 for j = 1:fileNum
                     pulseBlockIndBeg = (j-1) * pulseNum  + 1;
@@ -116,19 +123,23 @@ if (plotFFT == true)
             else % Plot all pulses
                 g = plot(dataBlock.', 'Color', plotColors(k,:));
             end
+
+            if (i == 9)
+                savedRow = mean(dataBlock, 1);
+
+            end
         end
 
         % Create legend based on the colormap
         if (doingSubplots == false)
             legendStrings = "Distance = " + string(1:1:labelNum );
             legend(legendStrings)
-        end
-
-        if (plotLabelFirst == true)
+        elseif (plotLabelFirst == true)
             legendStrings = "Volume: " + string(1:1:micNum);
             legend(legendStrings);
+        elseif (plotMean == true)
+            legend("Unpressed FFT", "Pressed FFT")
         end
-
         % ylim([30 110])
     end
 end
@@ -138,176 +149,178 @@ end
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
-% Parameters
-Fs = 48e3;
-numFilesSelected = 250;
-pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
-filesPerLabel = 10;
-noiseThreshold = 10;
-noiseThreshold2 = 3;
-magnitudeThreshold = 70; %80;
-magnitudeThreshold2 = 70;
-tubeFilter = 17e3;
-filterOn = true;
+if (plotTime == true || plotSpectrogram == true)
+    % Parameters
+    Fs = 48e3;
+    numFilesSelected = 250;
+    pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
+    filesPerLabel = 10;
+    noiseThreshold = 10;
+    noiseThreshold2 = 3;
+    magnitudeThreshold = 70; %80;
+    magnitudeThreshold2 = 70;
+    tubeFilter = -1; %17e3;
+    filterOn = true;
 
-% "Switches" to control the script operation
-findResonances = true;
-trialDuplication = false; % Duplicate the FFTs of each trial, in series after the set, row-wise
-windowModifier = 0;
-transmitSignal = [0 0 0 0 0 1 0 0 0 0 0];
-minpeakHeight = 1000; % 300, previously % 10, previously
-gapTime = 0.05;
-pulseLength = 300;
-smoothingFactor = 5; % 5 - tube. 10 - balloon
-t = length(transmitSignal);
-% For 26 cm tube -> make this 0
-% For 10 cm tube -> make this 2
-minPeakProminence = 2;
-% Large arrays that have been pre-allocated to store results calculated
-% during the primary loop
-allStartFFT = zeros(numFilesSelected * pulseNum, 150);
-allPressFFT = zeros(micNum * numFilesSelected * pulseNum, 150);
-allChirpSegments = zeros(micNum * labelNum * filesPerLabel * pulseNum, 450);
+    % "Switches" to control the script operation
+    findResonances = true;
+    trialDuplication = false; % Duplicate the FFTs of each trial, in series after the set, row-wise
+    windowModifier = 0;
+    transmitSignal = [0 0 0 0 0 1 0 0 0 0 0];
+    minpeakHeight = 1000; % 300, previously % 10, previously
+    gapTime = 0.05;
+    pulseLength = 300;
+    smoothingFactor = 5; % 5 - tube. 10 - balloon
+    t = length(transmitSignal);
+    % For 26 cm tube -> make this 0
+    % For 10 cm tube -> make this 2
+    minPeakProminence = 2;
+    % Large arrays that have been pre-allocated to store results calculated
+    % during the primary loop
+    allStartFFT = zeros(numFilesSelected * pulseNum, 150);
+    allPressFFT = zeros(micNum * numFilesSelected * pulseNum, 150);
+    allChirpSegments = zeros(micNum * labelNum * filesPerLabel * pulseNum, 450);
 
-pressFFTCounter = 1;
-segmentCounter = 1;
-for m = 1:micNum
-    folderPath = folderNames{m};
-    originalFiles = dir([folderPath '/*.txt']);
+    pressFFTCounter = 1;
+    segmentCounter = 1;
+    for m = 1:micNum
+        folderPath = folderNames{m};
+        originalFiles = dir([folderPath '/*.txt']);
 
-    dirStartInd = filesPerLabel  * (pulseInd - 1) + 1;
+        dirStartInd = filesPerLabel  * (pulseInd - 1) + 1;
 
-    for k = 1:length(originalFiles) %dirStartInd:dirStartInd + numFilesSelected - 1
-        fileName = [folderPath '/' originalFiles(k).name];
+        for k = 1:length(originalFiles) %dirStartInd:dirStartInd + numFilesSelected - 1
+            fileName = [folderPath '/' originalFiles(k).name];
 
-        micData = readmatrix(fileName);
+            micData = readmatrix(fileName);
 
-        [r, lags] = xcorr(transmitSignal, micData);
-        [peaks, peakLocations] = findpeaks(r, 'MinPeakHeight', minpeakHeight, 'MinPeakDistance', gapTime * Fs * 0.5); % length(t) / 2);
-        % MinPeakDistance: .wav - 300, .mp3 - 10
+            [r, lags] = xcorr(transmitSignal, micData);
+            [peaks, peakLocations] = findpeaks(r, 'MinPeakHeight', minpeakHeight, 'MinPeakDistance', gapTime * Fs * 0.5); % length(t) / 2);
+            % MinPeakDistance: .wav - 300, .mp3 - 10
 
-        peakTimes = -lags(peakLocations);
-        peakTimes = abs(sort(peakTimes));
-        chirpIndex = 1; % Maybe change later?
+            peakTimes = -lags(peakLocations);
+            peakTimes = abs(sort(peakTimes));
+            chirpIndex = 1; % Maybe change later?
 
-        pulseCounter = 1;
-        indexCounter = 1;
-        % Iterate through all delta pulses detected by the cross-correlation
-        while pulseCounter < pulseNum + 1
-            if (tubeFilter ~= -1)
-                chirpIndex = length(peakTimes) - round(0.4 * length(peakTimes)) - 1 - indexCounter;
-            else
-                chirpIndex = length(peakTimes) - 1 - indexCounter;
-            end
-
-            indexCounter = indexCounter + 1;
-
-            % Extract the pulse and its reflections
-            % Do this only at the specified time increments: roughly quarter of
-            % the way through (resting state) or halfway through (pressdown
-            % state)
-
-            % Extract delta pulse by taking a small amount of time before and
-            % after it
-            try
-                chirpSegment = micData(peakTimes(chirpIndex) - pulseLength * 0.25 + windowModifier : peakTimes(chirpIndex) + pulseLength * 1.25 + windowModifier  - 1);
-            catch ME % Out of bounds index error
-                chirpSegment = micData(peakTimes(chirpIndex) - pulseLength * 0.25 + windowModifier : end);
-            end
-
-            % Perform FFT of the chirp segment
-            micDataF = mag2db(abs(fft(chirpSegment)));
-            f = linspace(0,Fs, length(micDataF));
-
-            % Plot frequency response
-
-            % Smooth out noise and "false peaks" using an average filter
-            smoothMicF = smooth(micDataF, smoothingFactor);
-
-            % Filter out noisy pulse samples
-            if (filterOn == true)
-                if (std(smoothMicF) < noiseThreshold)
-                    continue
+            pulseCounter = 1;
+            indexCounter = 1;
+            % Iterate through all delta pulses detected by the cross-correlation
+            while pulseCounter < pulseNum + 1
+                if (tubeFilter ~= -1)
+                    chirpIndex = length(peakTimes) - round(0.4 * length(peakTimes)) - 1 - indexCounter;
+                else
+                    chirpIndex = length(peakTimes) - 1 - indexCounter;
                 end
 
-                if (std(smoothMicF(120:150)) < noiseThreshold2) % 130:150
-                    continue
+                indexCounter = indexCounter + 1;
+
+                % Extract the pulse and its reflections
+                % Do this only at the specified time increments: roughly quarter of
+                % the way through (resting state) or halfway through (pressdown
+                % state)
+
+                % Extract delta pulse by taking a small amount of time before and
+                % after it
+                try
+                    chirpSegment = micData(peakTimes(chirpIndex) - pulseLength * 0.25 + windowModifier : peakTimes(chirpIndex) + pulseLength * 1.25 + windowModifier  - 1);
+                catch ME % Out of bounds index error
+                    chirpSegment = micData(peakTimes(chirpIndex) - pulseLength * 0.25 + windowModifier : end);
                 end
-            end
 
-            % Window the FFT graph so only the first 8 (or possibly 9)
-            % resonances are displayed
-            [~, resWindow(1)] = min(abs(f - 5000)); % - windF1
-            [~, resWindow(2)] = min(abs(f - 21000));
-            windowedF = smoothMicF(resWindow(1):resWindow(2));
+                % Perform FFT of the chirp segment
+                micDataF = mag2db(abs(fft(chirpSegment)));
+                f = linspace(0,Fs, length(micDataF));
 
-            if (filterOn == true)
-                if (max(windowedF(100:150)) < magnitudeThreshold2)
-                    continue
+                % Plot frequency response
+
+                % Smooth out noise and "false peaks" using an average filter
+                smoothMicF = smooth(micDataF, smoothingFactor);
+
+                % Filter out noisy pulse samples
+                if (filterOn == true)
+                    if (std(smoothMicF) < noiseThreshold)
+                        continue
+                    end
+
+                    if (std(smoothMicF(120:150)) < noiseThreshold2) % 130:150
+                        continue
+                    end
                 end
 
-                if (windowedF(1) < magnitudeThreshold)
-                    continue
+                % Window the FFT graph so only the first 8 (or possibly 9)
+                % resonances are displayed
+                [~, resWindow(1)] = min(abs(f - 5000)); % - windF1
+                [~, resWindow(2)] = min(abs(f - 21000));
+                windowedF = smoothMicF(resWindow(1):resWindow(2));
+
+                if (filterOn == true)
+                    if (max(windowedF(100:150)) < magnitudeThreshold2)
+                        continue
+                    end
+
+                    if (windowedF(1) < magnitudeThreshold)
+                        continue
+                    end
                 end
-            end
 
-            allChirpSegments(segmentCounter,:) = chirpSegment;
-            segmentCounter = segmentCounter + 1;
+                allChirpSegments(segmentCounter,:) = chirpSegment;
+                segmentCounter = segmentCounter + 1;
 
-            pulseCounter = pulseCounter + 1;
+                pulseCounter = pulseCounter + 1;
 
-            allPressFFT(pressFFTCounter, 1:length(windowedF)) = windowedF.';
-            pressFFTCounter = pressFFTCounter + 1;
-        end
-
-        % Only do this for the new mic, when we're duplicating the
-        % remainder trials
-        if (trialDuplication == true)
-            for l = 1:pulseNum
-                allPressFFT(pressFFTCounter, 1:length(windowedF)) = allPressFFT(pressFFTCounter - pulseNum,:);
+                allPressFFT(pressFFTCounter, 1:length(windowedF)) = windowedF.';
                 pressFFTCounter = pressFFTCounter + 1;
             end
-        end
-    end
-end
 
-
-for m = 1:micNum
-    if (plotTime == true)
-        figure
-
-
-        for i = 1:labelNum
-            dataBlockLen = pulseNum * fileNum;
-            dataBlockIndBeg = (m-1) * dataBlockLen * labelNum + (i-1) * dataBlockLen  + 1;
-            dataBlockIndEnd = dataBlockIndBeg + dataBlockLen - 1;
-
-            dataBlock = allChirpSegments(dataBlockIndBeg:dataBlockIndEnd,:);
-
-            avgChirpSegment = mean(dataBlock, 1);
-
-            subplot(figDims(1), figDims(2), i); hold on; plot(avgChirpSegment);
-            title(i * 0.5 + 0.5)
-            ylim([-6.2e3 6.2e3])
+            % Only do this for the new mic, when we're duplicating the
+            % remainder trials
+            if (trialDuplication == true)
+                for l = 1:pulseNum
+                    allPressFFT(pressFFTCounter, 1:length(windowedF)) = allPressFFT(pressFFTCounter - pulseNum,:);
+                    pressFFTCounter = pressFFTCounter + 1;
+                end
+            end
         end
     end
 
-    pulseCounter = 1;
 
-    if (plotSpectrogram == true)
-        figure
-        for i = 1:labelNum
-            dataBlockLen = pulseNum * fileNum;
-            dataBlockIndBeg = (m-1) * dataBlockLen * labelNum + (i-1) * dataBlockLen  + 1;
-            dataBlockIndEnd = dataBlockIndBeg + dataBlockLen - 1;
+    for m = 1:micNum
+        if (plotTime == true)
+            figure
 
-            dataBlock = allChirpSegments(dataBlockIndBeg:dataBlockIndEnd,:);
 
-            avgChirpSegment = mean(dataBlock, 1);
+            for i = 1:labelNum
+                dataBlockLen = pulseNum * fileNum;
+                dataBlockIndBeg = (m-1) * dataBlockLen * labelNum + (i-1) * dataBlockLen  + 1;
+                dataBlockIndEnd = dataBlockIndBeg + dataBlockLen - 1;
 
-            subplot(figDims(1), figDims(2), i); hold on; pspectrum(avgChirpSegment, 'spectrogram'); %spectrogram(avgChirpSegment);
-            title(i)
-            % title(i * 0.5 + 0.5)
+                dataBlock = allChirpSegments(dataBlockIndBeg:dataBlockIndEnd,:);
+
+                avgChirpSegment = mean(dataBlock, 1);
+
+                subplot(figDims(1), figDims(2), i); hold on; plot(avgChirpSegment);
+                title(i * 0.5 + 0.5)
+                ylim([-6.2e3 6.2e3])
+            end
+        end
+
+        pulseCounter = 1;
+
+        if (plotSpectrogram == true)
+            figure
+            for i = 1:labelNum
+                dataBlockLen = pulseNum * fileNum;
+                dataBlockIndBeg = (m-1) * dataBlockLen * labelNum + (i-1) * dataBlockLen  + 1;
+                dataBlockIndEnd = dataBlockIndBeg + dataBlockLen - 1;
+
+                dataBlock = allChirpSegments(dataBlockIndBeg:dataBlockIndEnd,:);
+
+                avgChirpSegment = mean(dataBlock, 1);
+
+                subplot(figDims(1), figDims(2), i); hold on; pspectrum(avgChirpSegment, 'spectrogram'); %spectrogram(avgChirpSegment);
+                title(i)
+                % title(i * 0.5 + 0.5)
+            end
         end
     end
 end

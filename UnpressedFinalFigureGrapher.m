@@ -12,16 +12,17 @@ grid5x5_3 = '5x5 Grid Mic 3';
 grid5x5 = {grid5x5_1, grid5x5_2, grid5x5_3};
 controlJan24 = 'Control/Jan 24';
 control5x5 = 'Control/5x5 Sample';
+tube1D = 'Rubber Tube 0.5 Res';
 
-folderPath = control5x5;
+folderPath = tube1D;
 
 % Parameters
 Fs = 48e3;
 pulseNum = 10;
 fileNum = 1; % Files per label
-micNum = 3;
-labelNum = 3;
-figDims = [ 3 3 ];
+micNum = 1; %3; 1;
+labelNum = 1; %3;
+figDims = [3 3]; %[ 3 3 ]; [1 3]; 
 
 numFilesSelected = 3;
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
@@ -33,6 +34,7 @@ magnitudeThreshold2 = 70;
 filterOn = true;
 
 % "Switches" to control the script operation
+freqWindow = [2500 20e3]; %[2500 20000]; %[5e3 21e3];
 findResonances = true;
 trialDuplication = false; % Duplicate the FFTs of each trial, in series after the set, row-wise
 windowModifier = 0;
@@ -113,8 +115,8 @@ for m = 1:micNum
 
         % Window the FFT graph so only the first 8 (or possibly 9)
         % resonances are displayed
-        [~, resWindow(1)] = min(abs(f - 5000)); % - windF1
-        [~, resWindow(2)] = min(abs(f - 21000));
+        [~, resWindow(1)] = min(abs(f - freqWindow(1))); % - windF1
+        [~, resWindow(2)] = min(abs(f - freqWindow(2)));
         windowedF = smoothMicF(resWindow(1):resWindow(2));
 
         if (filterOn == true)
@@ -151,6 +153,7 @@ end
 figure
 m = 1;
 subplotCounter = 1;
+allAvgFFTs = zeros(labelNum, width(allPressFFT));
 for i = 1:labelNum
     dataBlockLen = pulseNum * fileNum;
     dataBlockIndBeg = (m-1) * dataBlockLen * labelNum + (i-1) * dataBlockLen  + 1;
@@ -165,9 +168,10 @@ for i = 1:labelNum
     ylim([30 110])
 
     subplotCounter = subplotCounter + 1;
+    allAvgFFTs(i,:) = avgFFT;
 end
 
-
+allAvgTimes = zeros(labelNum, width(allChirpSegments));
 for i = 1:labelNum
     dataBlockLen = pulseNum * fileNum;
     dataBlockIndBeg = (m-1) * dataBlockLen * labelNum + (i-1) * dataBlockLen  + 1;
@@ -182,6 +186,7 @@ for i = 1:labelNum
     ylim([-6.2e3 6.2e3])
 
     subplotCounter = subplotCounter + 1;
+    allAvgTimes(i,:) = avgChirpSegment; 
 end
 
 pulseCounter = 1;
