@@ -61,27 +61,28 @@ white_vol3_3 = 'BG White Vol 3 Mic 3';
 rubberTube_res05 = 'Rubber Tube 0.5 Res';
 rubberTube_6obj = 'Rubber Tube 6 Objects';
 rubberTube_6obj2 = 'Rubber Tube 6 Objects 2';
+rubberTube_6obj2_control = 'Control/Gripper 1D';
 
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = rubberTube_6obj2;
+folderPath = varobj3_3;
 
 % Parameters
-numFilesSelected = 60;
+numFilesSelected = 1;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
 noiseThreshold = 10;
 noiseThreshold2 = 2; %2;
-magnitudeThreshold = 30; %30; %70; %80;
-magnitudeThreshold2 = 30; % 30; %70;
+magnitudeThreshold = 70; %30; %70; %80;
+magnitudeThreshold2 = 70; % 30; %70;
 filterOn = true;
 tubeFilter = -1; %17e3; % Set to -1 if you want to turn it off. For rubber tube data only.
 %[5000 21000]; <- 2D surface
-fftWindow = [2500 20e3]; %;[5000 21e3]; %[2500 20000];
+fftWindow = [5000 21e3]; %[2500 15e3]; %;[5000 21e3]; %[2500 20000];
 
 % "Switches" to control the script operation
 findResonances = true;
@@ -91,7 +92,7 @@ transmitSignal = [0 0 0 0 0 1 0 0 0 0 0];
 minpeakHeight = 1000; % 300, previously % 10, previously
 gapTime = 0.05;
 pulseLength = 300;
-smoothingFactor = 5; % 5 - tube. 10 - balloon
+smoothingFactor = 1; % 5 - tube. 10 - balloon
 t = length(transmitSignal);
 % For 26 cm tube -> make this 0
 % For 10 cm tube -> make this 2
@@ -243,10 +244,10 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         windowedSmooth = smoothMicF(resWindow(1):resWindow(2));
 
         if (filterOn == true)
-            if (max(windowedSmooth(100:150)) < magnitudeThreshold2)
-                filterCounts(4) = filterCounts(4) + 1;
-                continue
-            end
+            % if (max(windowedSmooth(100:150)) < magnitudeThreshold2)
+            %     filterCounts(4) = filterCounts(4) + 1;
+            %     continue
+            % end
 
             if (windowedSmooth(1) < magnitudeThreshold)
                 filterCounts(5) = filterCounts(5) + 1;
