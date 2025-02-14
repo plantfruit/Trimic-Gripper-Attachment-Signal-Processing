@@ -71,7 +71,7 @@ rubberTube_6obj2_control = 'Control/Gripper 1D';
 folderPath = varobj3_3;
 
 % Parameters
-numFilesSelected = 1;
+numFilesSelected = 10;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
@@ -82,7 +82,7 @@ magnitudeThreshold2 = 70; % 30; %70;
 filterOn = true;
 tubeFilter = -1; %17e3; % Set to -1 if you want to turn it off. For rubber tube data only.
 %[5000 21000]; <- 2D surface
-fftWindow = [5000 21e3]; %[2500 15e3]; %;[5000 21e3]; %[2500 20000];
+fftWindow = [5e3 21e3]; %[2500 15e3]; %;[5000 21e3]; %[2500 20000];
 
 % "Switches" to control the script operation
 findResonances = true;
