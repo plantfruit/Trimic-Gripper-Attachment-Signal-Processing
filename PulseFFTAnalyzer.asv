@@ -59,6 +59,8 @@ white_vol3_2 = 'BG White Vol 3 Mic 2';
 white_vol3_3 = 'BG White Vol 3 Mic 3';
 
 rubberTube_res05 = 'Rubber Tube 0.5 Res';
+rubberTube_6obj = 'Rubber Tube 6 Objects';
+rubberTube_6obj2 = 'Rubber Tube 6 Object'
 
 %=========================================================================
 % Beginning of Analysis Portion of Script
@@ -68,18 +70,18 @@ rubberTube_res05 = 'Rubber Tube 0.5 Res';
 folderPath = rubberTube_res05;
 
 % Parameters
-numFilesSelected = 50;
+numFilesSelected = 1;
 pulseNum = 10; % Number of pulses to extract from each file
-pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
+pulseInd = 9; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
 noiseThreshold = 10;
-noiseThreshold2 = 3;
-magnitudeThreshold = 30; %70; %80;
-magnitudeThreshold2 = 90; %70;
+noiseThreshold2 = 3; %2;
+magnitudeThreshold = 30; %30; %70; %80;
+magnitudeThreshold2 = 30; % 30; %70;
 filterOn = true;
-tubeFilter = 7000; % Set to -1 if you want to turn it off. For rubber tube data only.
+tubeFilter = 17e3; %17e3; % Set to -1 if you want to turn it off. For rubber tube data only.
 %[5000 21000]; <- 2D surface
-fftWindow = [2500 20000]; 
+fftWindow = [2500 20e3]; %;[5000 21e3]; %[2500 20000];
 
 % "Switches" to control the script operation
 findResonances = true;
@@ -105,9 +107,6 @@ timeIncrements = [0.22 0.7 0.77];
 % Go to the directory containing data files (other directories are
 % commented out
 % cd(folderPath);
-
-% Excise trailing zeros
-%micData = micData(1:find(micData, 1, 'last'));
 
 % Source: https://www.mathworks.com/matlabcentral/answers/411500-how-do-i-read-all-the-files-in-a-folder
 originalFiles = dir([folderPath '/*.txt']);
@@ -136,11 +135,16 @@ allPressFFT = zeros(numFilesSelected * pulseNum, 100);
 dirStartInd = filesPerLabel  * (pulseInd - 1) + 1;
 
 pressFFTCounter = 1;
+filterCounts = zeros(1, 5);
+
 % Select a group of files from the folder
 for k = dirStartInd:dirStartInd + numFilesSelected - 1
     fileName = [folderPath '/' originalFiles(k).name];
 
     micData = readmatrix(fileName);
+
+    % Excise trailing zeros
+    micData = micData(1:find(micData, 1, 'last'));
 
     [r, lags] = xcorr(transmitSignal, micData);
     [peaks, peakLocations] = findpeaks(r, 'MinPeakHeight', minpeakHeight, 'MinPeakDistance', gapTime * Fs * 0.5); % length(t) / 2);
@@ -172,13 +176,18 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
     while pulseCounter < pulseNum + 1
         % chirpIndex = length(peakTimes) - 2 - pulseNum + i;
         % chirpIndex = indexCounter;
-        chirpIndex = length(peakTimes) - 1 - indexCounter;
+        if (tubeFilter ~= -1)
+            chirpIndex = length(peakTimes) - round(0.35 * length(peakTimes)) - 1 - indexCounter;            
+        else
+            chirpIndex = length(peakTimes) - 1 - indexCounter;
+        end
         indexCounter = indexCounter + 1;
 
         if (filterOn == true)
-            if (tubeFilter ~= -1 && peaks(chirpIndex) > tubeFilter)                
-                continue
-            end
+            % if (tubeFilter ~= -1 && peaks(chirpIndex) > tubeFilter)
+            %     filterCounts(1) = filterCounts(1) + 1;
+            %     continue
+            % end
         end
 
         % Extract the pulse and its reflections
@@ -213,12 +222,14 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         % Filter out noisy pulse samples
         if (filterOn == true)
             if (std(smoothMicF) < noiseThreshold)
+                filterCounts(2) = filterCounts(2) + 1;
                 continue
             end
 
             if (std(smoothMicF(120:150)) < noiseThreshold2) % 130:150
+                filterCounts(3) = filterCounts(3) + 1;
                 continue
-            end           
+            end
         end
 
         % if (range(smoothMicF) < 30)
@@ -233,10 +244,12 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
 
         if (filterOn == true)
             if (max(windowedSmooth(100:150)) < magnitudeThreshold2)
+                filterCounts(4) = filterCounts(4) + 1;
                 continue
             end
 
             if (windowedSmooth(1) < magnitudeThreshold)
+                filterCounts(5) = filterCounts(5) + 1;
                 continue
             end
         end
@@ -265,6 +278,9 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
 
         xlabel("Frequency (Hz)"); ylabel("Magnitude");
         title("Microphone Data, Frequency-Domain, " + fileName)
+
+        subplot(figDims(1), figDims(2), 1)
+        hold on; plot(peakLocations(chirpIndex), peaks(chirpIndex), 'r.', 'LineWidth', 2, 'MarkerSize', 25);
     end
 
     % Only do this for the new mic, when we're duplicating the
