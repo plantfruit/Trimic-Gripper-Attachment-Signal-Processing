@@ -68,12 +68,12 @@ rubberTube_6obj2_control = 'Control/Gripper 1D';
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = varobj3_3;
+folderPath = grid5x5_mic3;
 
 % Parameters
-numFilesSelected = 10;
+numFilesSelected = 1;
 pulseNum = 10; % Number of pulses to extract from each file
-pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
+pulseInd = 12; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
 noiseThreshold = 10;
 noiseThreshold2 = 2; %2;
