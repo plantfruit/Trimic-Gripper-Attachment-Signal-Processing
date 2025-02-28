@@ -66,22 +66,20 @@ rubberTube_6obj2_control = 'Control/Gripper 1D';
 noiseIso2D = 'Noise Isolation/2Dre';
 noiseIso1D = 'Noise Isolation/1Dre';
 
-
-
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = noiseIso1D;
+folderPath = noiseIso2D;
 
 % Parameters
-numFilesSelected = 10;
+numFilesSelected = 6;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
 noiseThreshold = 10;
-noiseThreshold2 = 1; %2;
+noiseThreshold2 = 2; %2;
 magnitudeThreshold = 70; %30; %70; %80;
 magnitudeThreshold2 = 70; % 30; %70;
 filterOn = true;
@@ -216,7 +214,7 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
             subplot(figDims(1), figDims(2), 2); hold on; graph = plot(chirpSegment); %hold on; xline((peakTimes(chirpIndex) + windowModifier) / Fs, 'b-'); xline((peakTimes(chirpIndex) /Fs + (length(t) + windowModifier  - 1) /Fs), 'r-');
             % subplotCounter = subplotCounter + 1;
         else
-            chirpSegment = micData(length(micData) - Fs:end);
+            chirpSegment = micData;
             pulseCounter = pulseNum + 1;
         end
         % Perform FFT of the chirp segment
@@ -289,8 +287,10 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
         hold on; g = plot(f(1:resWindow(2)-resWindow(1) + 1), windowedF); %hold on; scatter(resonanceFrequencies, peakVals)
         ylim([0 140])
         % subplotCounter = subplotCounter + 1;
+
         xlabel("Frequency (Hz)"); ylabel("Magnitude");
         title("Microphone Data, Frequency-Domain, " + fileName)
+        print("")
 
         if (doCorrelation)
             subplot(figDims(1), figDims(2), 1)
