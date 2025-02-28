@@ -66,36 +66,43 @@ rubberTube_6obj2_control = 'Control/Gripper 1D';
 noiseIso2D = 'Noise Isolation/2Dre';
 noiseIso1D = 'Noise Isolation/1Dre';
 
-
+chirpExp_1 = 'Chirp Exponential/1'; chirpExp_2 = 'Chirp Exponential/2'; chirpExp_3 = 'Chirp Exponential/3';
+chirpLin_1 = 'Chirp Linear/1'; chirpLin_2 = 'Chirp Linear/2'; chirpLin_3 = 'Chirp Linear/3';
 
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = noiseIso1D;
+folderPath = chirpLin_3;
 
 % Parameters
-numFilesSelected = 10;
+numFilesSelected = 1;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
-noiseThreshold = 10;
+noiseThreshold = 1; %10;
 noiseThreshold2 = 1; %2;
-magnitudeThreshold = 70; %30; %70; %80;
+magnitudeThreshold = 50; %30; %70; %80;
 magnitudeThreshold2 = 70; % 30; %70;
 filterOn = true;
 tubeFilter = -1; %17e3; % Set to -1 if you want to turn it off. For rubber tube data only.
 %[5000 21000]; <- 2D surface
-fftWindow = [5e3 21e3]; %[2.5e3 15e3]; %;[5e3 21e3]; %[2.5e3 20e3];
-doCorrelation = false;
+fftWindow = [5e3 22e3]; %[2.5e3 15e3]; %;[5e3 21e3]; %[2.5e3 20e3];
+%5e3 21e3 - 2D sensor w delta pulse
+%2.5 20e3 - 1D sensor 
+%5e3 22e3 - 2D sensor w 18-20 kHz chirp
+doCorrelation = true;
 
 % "Switches" to control the script operation
 findResonances = true;
 trialDuplication = false; % Duplicate the FFTs of each trial, in series after the set, row-wise
 windowModifier = 0;
-transmitSignal = [0 0 0 0 0 1 0 0 0 0 0];
-minpeakHeight = 1000; % 300, previously % 10, previously
+t = 1/Fs:1/Fs:0.1; 
+transmitSignal = chirp(t, 18e3, max(t), 20e3, 'logarithmic'); % [0 0 0 0 0 1 0 0 0 0 0];
+minpeakHeight = 6e6; %15e6; 
+% 1000;
+% 300, previously % 10, previously
 gapTime = 0.05;
 pulseLength = 300;
 smoothingFactor = 10; %1; % 5 - tube. 10 - balloon
@@ -114,7 +121,7 @@ timeIncrements = [0.22 0.7 0.77];
 % Go to the directory containing data files (other directories are
 % commented out
 % cd(folderPath);
-
+ 
 % Source: https://www.mathworks.com/matlabcentral/answers/411500-how-do-i-read-all-the-files-in-a-folder
 originalFiles = dir([folderPath '/*.txt']);
 fileNames = originalFiles;
@@ -153,6 +160,7 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
     % Excise trailing zeros
     micData = micData(1:find(micData, 1, 'last'));
 
+    figure
     if (doCorrelation)
         [r, lags] = xcorr(transmitSignal, micData);
         [peaks, peakLocations] = findpeaks(r, 'MinPeakHeight', minpeakHeight, 'MinPeakDistance', gapTime * Fs * 0.5); % length(t) / 2);
@@ -181,7 +189,6 @@ for k = dirStartInd:dirStartInd + numFilesSelected - 1
     pulseCounter = 1;
     indexCounter = 1;
 
-    figure
     % Iterate through all delta pulses detected by the cross-correlation
     while pulseCounter < pulseNum + 1
         % chirpIndex = length(peakTimes) - 2 - pulseNum + i;
