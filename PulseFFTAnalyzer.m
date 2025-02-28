@@ -63,6 +63,9 @@ rubberTube_6obj = 'Rubber Tube 6 Objects';
 rubberTube_6obj2 = 'Rubber Tube 6 Objects 2';
 rubberTube_6obj2_control = 'Control/Gripper 1D';
 
+noiseIso2D = 'Noise Isolation/2Dre';
+noiseIso1D = 'Noise Isolation/1Dre';
+
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
