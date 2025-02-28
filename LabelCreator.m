@@ -10,8 +10,8 @@ objNames = {"Stylus", "Screwdriver", "Battery", "Plug", "Motor", "Tripod"};
 
 for i = 1:gridSize
     for j = 1:fileNum * pulseNum
-        labels((i - 1) * fileNum * pulseNum + j) = i; %objNames{i};
+        labels((i - 1) * fileNum * pulseNum + j) = objNames{i};
     end
 end
 
-save("1Dtube_6obj2_labels.txt", "labels", "-ascii")
+save("miscobj3_labels.txt", "labels", "-ascii")
