@@ -65,34 +65,38 @@ rubberTube_6obj2_control = 'Control/Gripper 1D';
 
 noiseIso2D = 'Noise Isolation/2Dre';
 noiseIso1D = 'Noise Isolation/1Dre';
+noiseIso2D_2 = 'Noise Isolation/v3_2D';
+noiseIso1D_2 = 'Noise Isolation/v3_1D';
 
 chirpExp_1 = 'Chirp Exponential/1'; chirpExp_2 = 'Chirp Exponential/2'; chirpExp_3 = 'Chirp Exponential/3';
 chirpLin_1 = 'Chirp Linear/1'; chirpLin_2 = 'Chirp Linear/2'; chirpLin_3 = 'Chirp Linear/3';
+
+
 
 %=========================================================================
 % Beginning of Analysis Portion of Script
 %=========================================================================
 
 % Select the dataset to analyze
-folderPath = chirpLin_3;
+folderPath = noiseIso1D_2;
 
 % Parameters
-numFilesSelected = 1;
+numFilesSelected = 6;
 pulseNum = 10; % Number of pulses to extract from each file
 pulseInd = 1; % Where we start collecting the number of pulses, from cross-correlation indices
 filesPerLabel = 10;
 noiseThreshold = 1; %10;
-noiseThreshold2 = 1; %2;
-magnitudeThreshold = 50; %30; %70; %80;
-magnitudeThreshold2 = 70; % 30; %70;
+noiseThreshold2 = 0; %2;
+magnitudeThreshold = 10; %30; %70; %80;
+magnitudeThreshold2 = 10; % 30; %70;
 filterOn = true;
 tubeFilter = -1; %17e3; % Set to -1 if you want to turn it off. For rubber tube data only.
 %[5000 21000]; <- 2D surface
-fftWindow = [5e3 22e3]; %[2.5e3 15e3]; %;[5e3 21e3]; %[2.5e3 20e3];
+fftWindow = [5e3 21e3]; %[2.5e3 15e3]; %;[5e3 21e3]; %[2.5e3 20e3];
 %5e3 21e3 - 2D sensor w delta pulse
 %2.5 20e3 - 1D sensor 
 %5e3 22e3 - 2D sensor w 18-20 kHz chirp
-doCorrelation = true;
+doCorrelation = false;
 
 % "Switches" to control the script operation
 findResonances = true;
